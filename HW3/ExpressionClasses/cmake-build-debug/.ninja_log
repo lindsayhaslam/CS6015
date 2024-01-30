@@ -1,0 +1,17 @@
+# ninja log v5
+1	36	1705606631944340341	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+0	2036	1705606633939307746	CMakeFiles/ExpressionClasses.dir/main.cpp.o	c4d9c5aaf3667695
+2037	2093	1705606634005776658	ExpressionClasses	55aa78d346ceff81
+6	2062	1705610310250733673	CMakeFiles/ExpressionClasses.dir/main.cpp.o	c4d9c5aaf3667695
+7	2130	1705693558274565641	CMakeFiles/ExpressionClasses.dir/main.cpp.o	c4d9c5aaf3667695
+8	459	1705698227968125932	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+7	2257	1705698252405979283	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
+9	2994	1706033101993234910	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+9	3059	1706033102057652788	CMakeFiles/ExpressionClasses.dir/main.cpp.o	c4d9c5aaf3667695
+10	3067	1706033102067250680	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
+7	197	1706034136222111006	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+7	269	1706034136293720907	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
+7	200	1706035534788399101	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+7	275	1706035534862889617	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
+6	193	1706039815052310312	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
+6	272	1706039815131216776	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
