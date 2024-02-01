@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/lindsayhaslam/CS6015/HW2/ExpressionClasses/cmake-build-debug",
-		"source" : "/Users/lindsayhaslam/CS6015/HW2/ExpressionClasses"
+		"build" : "/Users/lindsayhaslam/CS6015/HW3/ExpressionClasses/cmake-build-debug",
+		"source" : "/Users/lindsayhaslam/CS6015/HW3/ExpressionClasses"
 	},
 	"version" : 
 	{
