@@ -1,5 +1,0 @@
-# ninja log v5
-6	193	1706039815052310312	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	8c458d36c1acaf2b
-9	3059	1706033102057652788	CMakeFiles/ExpressionClasses.dir/main.cpp.o	c4d9c5aaf3667695
-6	272	1706039815131216776	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	ab664e0eaab690da
-2037	2093	1705606634005776658	ExpressionClasses	55aa78d346ceff81
