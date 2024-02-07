@@ -1,0 +1,30 @@
+#Makefile - Builds Lab1 for CS6015
+#Lindsay Haslam
+#
+#Targets:
+#all = builds everything
+#clean = deletes all .o, .a, binaries, etc.
+#run = runs the program with "make run"
+
+all: program
+
+program: Caps.o Clothing.o Pants.o main.o
+		 c++ Caps.o Clothing.o Pants.o main.o -o program
+	
+Caps.o: Caps.cpp Caps.h
+	c++ -c Caps.cpp
+
+Clothing.o: Clothing.cpp Clothing.h
+	c++ -c Clothing.cpp
+
+main.o: main.cpp
+	c++ -c main.cpp
+
+Pants.o: Pants.cpp Pants.h
+	c++ -c Pants.cpp
+
+clean:
+	   rm -f *.o *.out program
+
+run: program
+	./program

@@ -1,0 +1,46 @@
+\doxysection{/\+Users/lindsayhaslam/\+CS6015/\+HW4/\+Expression\+Classes/\+Expr.h File Reference}
+\hypertarget{_expr_8h}{}\label{_expr_8h}\index{/Users/lindsayhaslam/CS6015/HW4/ExpressionClasses/Expr.h@{/Users/lindsayhaslam/CS6015/HW4/ExpressionClasses/Expr.h}}
+
+
+This header file defines a hierarchy of expression classes for representing and manipulating arithmetic expressions.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_expr}{Expr}}
+\item 
+class \mbox{\hyperlink{class_num}{Num}}
+\item 
+class \mbox{\hyperlink{class_var}{Var}}
+\item 
+class \mbox{\hyperlink{class_add}{Add}}
+\item 
+class \mbox{\hyperlink{class_mult}{Mult}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{_expr_8h_a9e5fdf365cd8dc7be4d972daf07f8bdf}\label{_expr_8h_a9e5fdf365cd8dc7be4d972daf07f8bdf} 
+enum {\bfseries precedence\+\_\+t} \{ {\bfseries prec\+\_\+none}
+, {\bfseries prec\+\_\+add}
+, {\bfseries prec\+\_\+mult}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This header file defines a hierarchy of expression classes for representing and manipulating arithmetic expressions. 
+
+\begin{DoxyAuthor}{Author}
+Lindsay Haslam 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+1/18/24 
+\end{DoxyDate}
+The {\ttfamily \doxylink{class_expr}{Expr}} class hierarchy includes classes for numerical values ({\ttfamily \doxylink{class_num}{Num}}), variables ({\ttfamily \doxylink{class_var}{Var}}), addition operations ({\ttfamily \doxylink{class_add}{Add}}), and multiplication operations ({\ttfamily \doxylink{class_mult}{Mult}}). Each class provides methods for equality checks, interpretation (evaluation), variable presence checks, substitution, and printing. The design supports the construction and manipulation of arithmetic expressions involving integers, variables, addition, and multiplication, allowing for pretty-\/printing and evaluation with variable substitution. 
