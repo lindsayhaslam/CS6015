@@ -8,6 +8,7 @@
  */
 #include "ExprTests.h"
 
+
 //**********VAR TESTS********//
 TEST_CASE("Expr Var") {
     //Test with same name
@@ -87,7 +88,6 @@ TEST_CASE("Add Subst") {
     CHECK((new Add(new Var("x"), new Var("x")))->subst("x", new Num(3))->interp() == 6);
     CHECK((new Add(new Var("y"), new Var("z")))->subst("y", new Num(3))->subst("z", new Num(2))->interp() == 5);
 }
-
 
 
 //**********NUM TESTS********//

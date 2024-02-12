@@ -33,7 +33,7 @@ public:
 
     string to_string();
     void pretty_print(ostream &ostream);
-    virtual void pretty_print_at(ostream &ot, precedence_t prec);
+    virtual void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
     string to_pretty_string();
 };
 
@@ -48,18 +48,18 @@ public:
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
     virtual void print (ostream& os);
-    string to_string();
+//    string to_string();
 };
 
 class Var : public Expr{
 public:
     string name;
     Var(string name);
-    bool equals(Expr *e);
-    int interp();
+    virtual bool equals(Expr *e);
+    virtual int interp();
     //Will have a variable.
-    bool has_variable();
-    Expr* subst( string varName, Expr* replacement);
+    virtual bool has_variable();
+    virtual Expr* subst(string varName, Expr* replacement);
     virtual void print (ostream& os);
 };
 
@@ -74,7 +74,7 @@ public:
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
     virtual void print (ostream& os);
-    void pretty_print_at(ostream &ot, precedence_t prec);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
 };
 
 class Mult : public Expr {
@@ -88,7 +88,23 @@ public:
     bool has_variable();
     Expr* subst(string varName, Expr* replacement);
     virtual void print (ostream& os);
-    void pretty_print_at(ostream &ot, precedence_t prec);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
+};
+
+class Let : public Expr {
+public:
+    string lhs; //String
+    Expr* rhs; //Bound expression
+    Expr* bodyExpr;
+    Let(string lhs, Expr* rhs, Expr* bodyExpr);
+    virtual bool equals(Expr *e);
+    //The product of the subexpression values
+    virtual int interp();
+    //Check if either have a variable
+    virtual bool has_variable();
+    virtual Expr* subst(string varName, Expr* replacement);
+    virtual void print (ostream& os);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
 };
 
 #endif //EXPRESSIONCLASSES_EXPR_H

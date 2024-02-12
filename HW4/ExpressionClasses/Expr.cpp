@@ -17,13 +17,13 @@ string Expr::to_string() {
     return st.str();
 }
 
-void Expr::pretty_print_at(ostream &ostream, precedence_t prec) {
-    print(ostream);
+void Expr::pretty_print_at(ostream &o, precedence_t prec, bool let_parent, streampos strmpos) {
+    print(o);
 }
 
-void Expr::pretty_print(ostream &ostream) {
-    pretty_print_at(ostream, prec_none);
-}
+//void Expr::pretty_print(ostream &ostream) {
+//    pretty_print_at(ostream, prec_none);
+//}
 
 string Expr::to_pretty_string() {
     stringstream st("");
@@ -231,17 +231,17 @@ void Add::print(ostream &ostream) {
  * \param o The output stream to print to.
  * \param prec The precedence level of the expression's context.
  */
-void Add::pretty_print_at(std::ostream &o, precedence_t prec) {
-    if (prec >= prec_add) {
-        o << "(";
-    }
-    lhs->pretty_print_at(o, prec_add);
-    o << " + ";
-    rhs->pretty_print_at(o, prec_none);
-    if (prec >= prec_add) {
-        o << ")";
-    }
-}
+//void Add::pretty_print_at(ostream &o, precedence_t prec, bool let_parent, streampos strmpos) {
+//    if (prec >= prec_add) {
+//        o << "(";
+//    }
+//    lhs->pretty_print_at(o, prec_add);
+//    o << " + ";
+//    rhs->pretty_print_at(o, prec_none);
+//    if (prec >= prec_add) {
+//        o << ")";
+//    }
+//}
 
 
 /**************MULT CLASS**************/
@@ -315,14 +315,88 @@ void Mult::print(ostream &ostream) {
   * \param o The output stream to print to.
  * \param prec The current precedence level.
  */
-void Mult::pretty_print_at(std::ostream &o, precedence_t prec) {
-    if (prec >= prec_mult) {
-        o << "(";
+//void Mult::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos) {
+//    if (node >= prec_mult) {
+//        os << "(";
+//    }
+//    lhs->pretty_print_at(os, prec_mult);
+//    os << " * ";
+//    rhs->pretty_print_at(os, prec_add);
+//    if (node >= prec_mult) {
+//        os << ")";
+//    }
+//}
+
+///************LET********/
+Let::Let(string lhs, Expr* rhs, Expr* bodyExpr){
+    this->lhs = lhs;
+    this->rhs = rhs;
+    this->bodyExpr = bodyExpr;
+}
+
+bool Let::has_variable() {
+return rhs->has_variable() || bodyExpr->has_variable();
+}
+
+bool Let::equals(Expr *e){
+    Let *let = dynamic_cast<Let *>(e);
+    if (let == nullptr) {
+        return false;
+    } else {
+        return this->lhs == let->lhs && this->rhs->equals(let->rhs) && this->bodyExpr->equals(let->bodyExpr);
     }
-    lhs->pretty_print_at(o, prec_mult);
-    o << " * ";
-    rhs->pretty_print_at(o, prec_add);
-    if (prec >= prec_mult) {
-        o << ")";
+}
+
+//
+int Let::interp() {
+    int rhsValue = rhs->interp();
+    Expr *substitutedBody = bodyExpr->subst(lhs, new Num(rhsValue));
+    int result = substitutedBody->interp();
+    return result;
+}
+
+Expr *Let::subst(string varName, Expr *replacement) {
+//    Expr *newRhs = rhs->subst(varName, replacement);
+    //If the variable to be substituted is the same as the current binding, avoid shadowing
+    if (lhs == varName) {
+        return new Let(lhs, rhs->subst(varName, replacement), bodyExpr);
+    } else {
+        //Substitute occurrences of varName in bodyExpr, but avoid capturing the binding
+        return new Let(lhs, rhs->subst(varName, replacement), bodyExpr->subst(varName, replacement));
     }
+}
+
+void Let::print(ostream &os) {
+    os << "(_let " << lhs << "=";
+    rhs->print(os);
+    os << " _in ";
+    bodyExpr->print(os);
+    os << ")";
+}
+
+bool let();
+//int letposition;
+void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos){
+////Step 1: Call tellp() on an ostream, it returns streampos
+//streampos startPos = os.tellp();
+//Calculate the depth (how many nested) by subtracting what you returned by the stream position
+//if (let_parent){
+//    os << "(";
+//}
+//
+//os << "let " << lhs << " = ";
+//streampos newPos = os.tellp();
+//long depthDiff = newPos - startPos;
+//
+//rhs->pretty_print_at()
+//If the bool is true, print the parenthesis like if(let_parent){ ostream <<"{"
+//Then print ostream << "let" << lhs << " = "
+//Recursively call rhs->printy_print_at(ostream, prec_non)
+//ostream << "/n"
+//I need a new tellp() (on the ostream)
+//Then you print how many spaces you need based on the depth and then you print "in"
+//Recursively call pretty print on the body
+//If the bool (if let_parent) { ostream, is true, print closing parenthesis.
+//
+//Change all of the method signatures to match the pretty print at
 }
