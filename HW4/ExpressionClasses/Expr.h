@@ -33,7 +33,7 @@ public:
 
     string to_string();
     void pretty_print(ostream &ostream);
-    virtual void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
+    virtual void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
     string to_pretty_string();
 };
 
@@ -74,7 +74,7 @@ public:
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
     virtual void print (ostream& os);
-    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
 class Mult : public Expr {
@@ -88,7 +88,7 @@ public:
     bool has_variable();
     Expr* subst(string varName, Expr* replacement);
     virtual void print (ostream& os);
-    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
 class Let : public Expr {
@@ -104,7 +104,7 @@ public:
     virtual bool has_variable();
     virtual Expr* subst(string varName, Expr* replacement);
     virtual void print (ostream& os);
-    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
 #endif //EXPRESSIONCLASSES_EXPR_H

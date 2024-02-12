@@ -8,7 +8,7 @@
 
 #include "Expr.h"
 
-using namespace std;
+//using namespace std;
 
 /***********EXPR CLASS****************/
 string Expr::to_string() {
@@ -17,13 +17,14 @@ string Expr::to_string() {
     return st.str();
 }
 
-void Expr::pretty_print_at(ostream &o, precedence_t prec, bool let_parent, streampos strmpos) {
-    print(o);
+void Expr::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos) {
+    print(os);
 }
 
-//void Expr::pretty_print(ostream &ostream) {
-//    pretty_print_at(ostream, prec_none);
-//}
+void Expr::pretty_print(ostream &ostream) {
+    streampos strmpos = 0;
+    pretty_print_at(ostream, prec_none, false, strmpos );
+}
 
 string Expr::to_pretty_string() {
     stringstream st("");
@@ -231,17 +232,17 @@ void Add::print(ostream &ostream) {
  * \param o The output stream to print to.
  * \param prec The precedence level of the expression's context.
  */
-//void Add::pretty_print_at(ostream &o, precedence_t prec, bool let_parent, streampos strmpos) {
-//    if (prec >= prec_add) {
-//        o << "(";
-//    }
-//    lhs->pretty_print_at(o, prec_add);
-//    o << " + ";
-//    rhs->pretty_print_at(o, prec_none);
-//    if (prec >= prec_add) {
-//        o << ")";
-//    }
-//}
+void Add::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos) {
+    if (node >= prec_add) {
+        os << "(";
+    }
+    lhs->pretty_print_at(os, prec_add, false, strmpos);
+    os << " + ";
+    rhs->pretty_print_at(os, prec_none, false, strmpos);
+    if (node >= prec_add) {
+        os << ")";
+    }
+}
 
 
 /**************MULT CLASS**************/
@@ -315,17 +316,17 @@ void Mult::print(ostream &ostream) {
   * \param o The output stream to print to.
  * \param prec The current precedence level.
  */
-//void Mult::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos) {
-//    if (node >= prec_mult) {
-//        os << "(";
-//    }
-//    lhs->pretty_print_at(os, prec_mult);
-//    os << " * ";
-//    rhs->pretty_print_at(os, prec_add);
-//    if (node >= prec_mult) {
-//        os << ")";
-//    }
-//}
+void Mult::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos) {
+    if (node >= prec_mult) {
+        os << "(";
+    }
+    lhs->pretty_print_at(os, prec_mult, true, strmpos);
+    os << " * ";
+    rhs->pretty_print_at(os, prec_add, false, strmpos);
+    if (node >= prec_mult) {
+        os << ")";
+    }
+}
 
 ///************LET********/
 Let::Let(string lhs, Expr* rhs, Expr* bodyExpr){
@@ -367,36 +368,40 @@ Expr *Let::subst(string varName, Expr *replacement) {
 }
 
 void Let::print(ostream &os) {
-    os << "(_let " << lhs << "=";
+    os << "(_let " << lhs << " = ";
     rhs->print(os);
     os << " _in ";
     bodyExpr->print(os);
     os << ")";
 }
 
-bool let();
-//int letposition;
-void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos strmpos){
-////Step 1: Call tellp() on an ostream, it returns streampos
-//streampos startPos = os.tellp();
-//Calculate the depth (how many nested) by subtracting what you returned by the stream position
-//if (let_parent){
-//    os << "(";
-//}
-//
-//os << "let " << lhs << " = ";
-//streampos newPos = os.tellp();
-//long depthDiff = newPos - startPos;
-//
-//rhs->pretty_print_at()
-//If the bool is true, print the parenthesis like if(let_parent){ ostream <<"{"
-//Then print ostream << "let" << lhs << " = "
-//Recursively call rhs->printy_print_at(ostream, prec_non)
-//ostream << "/n"
-//I need a new tellp() (on the ostream)
-//Then you print how many spaces you need based on the depth and then you print "in"
-//Recursively call pretty print on the body
-//If the bool (if let_parent) { ostream, is true, print closing parenthesis.
-//
-//Change all of the method signatures to match the pretty print at
+
+void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos){
+    // Calculate the indentation based on stream positions
+    streampos currentPos = os.tellp();
+    streampos indentSize = currentPos - strmpos;
+
+    if (let_parent) {
+        os << "(";
+    }
+
+    // Print the "let" part
+    os << "_let " << lhs << " = ";
+    rhs->pretty_print_at(os, node, false, indentSize);
+
+    os << "\n ";
+
+    string indentation(indentSize, ' ');
+
+    //Maybe make a new variable for this?
+    strmpos = os.tellp();
+    //Move to the next line and apply indentation for the "in" part
+    os << indentation << "_in  ";
+
+    //Print the body expression with updated strmpos
+    bodyExpr->pretty_print_at(os, node, false, strmpos);
+
+    if (let_parent) {
+        os << ")";
+    }
 }

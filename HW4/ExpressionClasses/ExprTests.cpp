@@ -6,13 +6,15 @@
  *
  * It includes tests for equality checks, interpretation (evaluation), variable presence checks, substitution, and pretty printing functionalities of arithmetic expressions. Each test case is designed to verify the correct behavior of the classes and their interactions, ensuring that expressions are correctly manipulated and evaluated according to the rules of arithmetic and variable substitution.
  */
-#include "ExprTests.h"
+#include "catch.h"
+#include <stdio.h>
+#include "Expr.h"
 
 
 //**********VAR TESTS********//
 TEST_CASE("Expr Var") {
     //Test with same name
-    CHECK((new Var("x"))->equals(new Var("x")) == true);
+    CHECK((new Var("x"))->equals(new Var("x")) == true );
     //Test with different name
     CHECK((new Var("x"))->equals(new Var("y")) == false);
     //Test comparing Var with a Num
@@ -228,6 +230,68 @@ TEST_CASE("Pretty Print Var Expressions") {
     CHECK(deepNestedExpr->subst("y", new Add(new Num(1), new Var("x")))->to_pretty_string() == "(x + 4) * z + (1 + x) * 3");
 }
 
+//TEST_CASE("Pretty Print"){
+//    CHECK((new Mult(new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") , new Num(1)) )), new Num(3)))->to_pretty_string() == "(2 * _let x = 5\n"
+//                                                                                                                                                 "   _in x + 1) * 3");
+//    CHECK((new Mult(new Num(5), new Add(new Let("x", new Num(5), new Var("x")), new Num(1))))->to_pretty_string() == "5 * ((_let x = 5\n"
+//                                                                                                                      "   _in x) + 1)");
+//    //Let in lhs of add
+//    CHECK((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->to_pretty_string() == "(_let x = 2\n"
+//                                                                                                                       " _in x + 9) + 4");
+//    //Let in lhs of multiplication expression
+//    CHECK((new Mult(new Let("x", new Num(5), new Add(new Var("x"), new Num(8))), new Num(3)))->to_pretty_string() == "(_let x = 5\n"
+//                                                                                                                      " _in x + 8) * 3");
+//    //Let nest as right argument of un-parenthesized multiplication expression
+//    CHECK((new Add (new Mult(new Num(4), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))), new Num(9)))->to_pretty_string() == "4 * (_let x = 5\n"
+//                                                                                                                                            "   _in x + 1) + 9");
+//    CHECK( (new Let("x",new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2 ))), new Var("x"))))->to_pretty_string() == "_let x = 5\n_in (_let y = 3\n   _in y + 2) + x");
+//}
+
+//Ben from Nabil
+TEST_CASE("Pretty Print") {
+
+//Let nested as right argument of parenthesized multiplication expression
+CHECK ((new Mult(new Mult(new Num(2), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
+                 new Num(3)))->to_pretty_string() == "(2 * _let x = 5\n"
+                                                "      _in  x + 1) * 3");
+//Let nested to the left in add expression which is nested to the right within a multiplication expression
+CHECK((new Mult(new Num(5), new Add(new Let("x", new Num(5), new Var("x")), new Num(1))))->to_pretty_string() ==
+      "5 * ((_let x = 5\n"
+      "       _in  x) + 1)");
+//Let in lhs of add
+CHECK ((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->to_pretty_string() ==
+       "(_let x = 2\n"
+       "  _in  x + 9) + 4");
+//Let in lhs of multiplication expression
+CHECK((new Mult(new Let("x", new Num(5), new Add(new Var("x"), new Num(8))), new Num(3)))->to_pretty_string() ==
+      "(_let x = 5\n"
+      "  _in  x + 8) * 3");
+//Let nest as right argument of un-parenthesized multiplication expression
+CHECK((new Add(new Mult(new Num(4), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
+               new Num(9)))->to_pretty_string() == "4 * (_let x = 5\n"
+                                              "      _in  x + 1) + 9");
+//Let nested to the left within let that is nested to the left within add
+CHECK ((new Add(new Let("x", new Num(3), new Let("y", new Num(3), new Add(new Var("y"), new Num(2)))),
+                new Var("x")))->to_pretty_string() == "(_let x = 3\n"
+                                                      "  _in  _let y = 3\n"
+                                                      "       _in  y + 2) + x");
+//Let nested in lhs of Add expression nested within body of let expression
+CHECK((new Let("x", new Num(5),
+                   new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
+              ->to_pretty_string() == "_let x = 5\n"
+                                 " _in  (_let y = 3\n"
+                                 "       _in  y + 2) + x");
+//Triple nested let
+CHECK((new Let("x", new Num(5),
+                   new Add(new Let("y", new Num(3),
+                                       new Add(new Var("y"), new Let("z", new Num(6),
+                                                                              new Add(new Var("a"), new Num(8))))),
+                           new Var("x"))))
+              ->to_pretty_string() == "_let x = 5\n"
+                                 " _in  (_let y = 3\n"
+                                 "       _in  y + _let z = 6\n"
+                                 "                _in  a + 8) + x");
+}
 
 
 
