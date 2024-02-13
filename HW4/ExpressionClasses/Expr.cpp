@@ -374,7 +374,7 @@ void Let::print(ostream &os) {
 }
 
 void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos){
-    // Calculate the indentation based on stream positions
+    //Calculate the indentation based on stream positions
     streampos currentPos = os.tellp();
     streampos indentSize = currentPos - strmpos;
 
@@ -382,7 +382,7 @@ void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, strea
         os << "(";
     }
 
-    // Print the "let" part
+    //Print the "let" part
     os << "_let " << lhs << " = ";
     rhs->pretty_print_at(os, node, false, indentSize);
 

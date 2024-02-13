@@ -30,7 +30,6 @@ public:
     virtual bool has_variable()  = 0;
     virtual Expr* subst(string varName, Expr* replacement)  = 0;
     virtual void print (ostream& os) = 0;
-
     string to_string();
     void pretty_print(ostream &ostream);
     virtual void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
@@ -73,7 +72,7 @@ public:
     //Check if either have a variable
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
-    virtual void print (ostream& os);
+    virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
@@ -87,7 +86,7 @@ public:
     //Check if either have a variable
     bool has_variable();
     Expr* subst(string varName, Expr* replacement);
-    virtual void print (ostream& os);
+    virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
