@@ -222,7 +222,7 @@ Expr *Add::subst(string varName, Expr *replacement) {
 void Add::print(ostream &ostream) {
     ostream << "(";
     lhs->print(ostream);
-    ostream << "+";
+    ostream << " + ";
     rhs->print(ostream);
     ostream << ")";
 }
@@ -236,7 +236,7 @@ void Add::pretty_print_at(ostream &os, precedence_t node, bool let_parent, strea
     if (node >= prec_add) {
         os << "(";
     }
-    lhs->pretty_print_at(os, prec_add, false, strmpos);
+    lhs->pretty_print_at(os, prec_add, true, strmpos);
     os << " + ";
     rhs->pretty_print_at(os, prec_none, false, strmpos);
     if (node >= prec_add) {
@@ -306,7 +306,7 @@ Expr *Mult::subst(string varName, Expr *replacement) {
 void Mult::print(ostream &ostream) {
     ostream << "(";
     this->lhs->print(ostream);
-    ostream << "*";
+    ostream << " * ";
     this->rhs->print(ostream);
     ostream << ")";
 }
@@ -348,7 +348,6 @@ bool Let::equals(Expr *e){
     }
 }
 
-//
 int Let::interp() {
     int rhsValue = rhs->interp();
     Expr *substitutedBody = bodyExpr->subst(lhs, new Num(rhsValue));
@@ -357,7 +356,6 @@ int Let::interp() {
 }
 
 Expr *Let::subst(string varName, Expr *replacement) {
-//    Expr *newRhs = rhs->subst(varName, replacement);
     //If the variable to be substituted is the same as the current binding, avoid shadowing
     if (lhs == varName) {
         return new Let(lhs, rhs->subst(varName, replacement), bodyExpr);
@@ -374,7 +372,6 @@ void Let::print(ostream &os) {
     bodyExpr->print(os);
     os << ")";
 }
-
 
 void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos){
     // Calculate the indentation based on stream positions

@@ -230,25 +230,139 @@ TEST_CASE("Pretty Print Var Expressions") {
     CHECK(deepNestedExpr->subst("y", new Add(new Num(1), new Var("x")))->to_pretty_string() == "(x + 4) * z + (1 + x) * 3");
 }
 
-//TEST_CASE("Pretty Print"){
-//    CHECK((new Mult(new Mult(new Num (2), new Let("x", new Num(5), new Add(new Var("x") , new Num(1)) )), new Num(3)))->to_pretty_string() == "(2 * _let x = 5\n"
-//                                                                                                                                                 "   _in x + 1) * 3");
-//    CHECK((new Mult(new Num(5), new Add(new Let("x", new Num(5), new Var("x")), new Num(1))))->to_pretty_string() == "5 * ((_let x = 5\n"
-//                                                                                                                      "   _in x) + 1)");
-//    //Let in lhs of add
-//    CHECK((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->to_pretty_string() == "(_let x = 2\n"
-//                                                                                                                       " _in x + 9) + 4");
-//    //Let in lhs of multiplication expression
-//    CHECK((new Mult(new Let("x", new Num(5), new Add(new Var("x"), new Num(8))), new Num(3)))->to_pretty_string() == "(_let x = 5\n"
-//                                                                                                                      " _in x + 8) * 3");
-//    //Let nest as right argument of un-parenthesized multiplication expression
-//    CHECK((new Add (new Mult(new Num(4), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))), new Num(9)))->to_pretty_string() == "4 * (_let x = 5\n"
-//                                                                                                                                            "   _in x + 1) + 9");
-//    CHECK( (new Let("x",new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2 ))), new Var("x"))))->to_pretty_string() == "_let x = 5\n_in (_let y = 3\n   _in y + 2) + x");
-//}
+//************LET CLASS**************//
+
+TEST_CASE("Let hasVariable()") {
+    SECTION("rhs contains a variable") {
+        Let expr("x", new Var("y"), new Num(10));
+        CHECK(expr.has_variable() == true);
+    }
+
+    SECTION("body expression contains a variable") {
+        Let expr("x", new Num(5), new Var("y"));
+        CHECK(expr.has_variable() == true);
+    }
+
+    SECTION("Both rhs and body expression contain variables") {
+        Let expr("x", new Var("y"), new Add(new Var("y"), new Num(3)));
+        CHECK(expr.has_variable() == true);
+    }
+
+    SECTION("Neither rhs nor body expression contains variables") {
+        Let expr("x", new Num(5), new Num(10));
+        CHECK(expr.has_variable() == false);
+    }
+}
+
+TEST_CASE("Let equals()") {
+    SECTION("Equal Let expressions") {
+        Let* expr1 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        Let* expr2 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        CHECK(expr1->equals(expr2));
+    }
+
+    SECTION("Different Let expressions due to lhs") {
+        Let* expr1 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        Let* expr2 = new Let("y", new Num(5), new Add(new Var("x"), new Num(3)));
+        CHECK_FALSE(expr1->equals(expr2));
+    }
+
+    SECTION("Different Let expressions due to rhs") {
+        Let* expr1 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        Let* expr2 = new Let("x", new Num(4), new Add(new Var("x"), new Num(3)));
+        CHECK_FALSE(expr1->equals(expr2));
+    }
+
+    SECTION("Different Let expressions due to bodyExpr") {
+        Let* expr1 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        Let* expr2 = new Let("x", new Num(5), new Add(new Var("x"), new Num(4)));
+        CHECK_FALSE(expr1->equals(expr2));
+    }
+
+    SECTION("Comparing Let expression with non-Let expression") {
+        Let* expr1 = new Let("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        Expr* expr2 = new Num(5); // Using base class pointer for polymorphism
+        CHECK_FALSE(expr1->equals(expr2));
+    }
+}
+
+TEST_CASE("Let Subst") {
+    //Tests that substituting 'x' with a new number in a Let expression where 'x' is both the bound variable and in the body doesn't affect the body due to shadowing rules.
+    CHECK((new Let("x", new Num(5), new Var("x")))->subst("x", new Num(10))->interp() == 5); //No substitution in bodyExpr due to shadowing
+    //Tests that substituting 'y' (not the bound variable) in the rhs of a Let expression affects the final interpretation correctly.
+    CHECK((new Let("x", new Var("y"), new Add(new Var("x"), new Num(3))))->subst("y", new Num(5))->interp() == 8); // Substitution in rhs
+    //Tests that substituting 'y' (not the bound variable) in both the rhs and the body of a Let expression affects the final interpretation correctly.
+    CHECK((new Let("x", new Add(new Var("y"), new Num(2)), new Add(new Var("x"), new Var("y"))))->subst("y", new Num(10))->interp() == 22); //Substitution in rhs and bodyExpr
+    //Tests that substituting 'x' with a new number does not affect the Let expression when 'x' is the bound variable, demonstrating shadowing.
+    CHECK( (new Let("x", new Num(5), new Add(new Var("x"), new Num(5))))->subst("x", new Num(4))
+                   ->equals( new Let("x", new Num(5), new Add(new Var("x"), new Num(5)))));
+    //Tests that substituting 'y' (not present in the Let expression) does not change the Let expression.
+    CHECK( (new Let("x", new Num(5), new Add(new Var("x"), new Num(5))))->subst("y", new Num(4))
+                   ->equals( new Let("x", new Num(5), new Add(new Var("x"), new Num(5)))));
+    //Tests substitution of 'x' in the rhs of a Let expression when 'x' is also the bound variable, showing that rhs can still be substituted.
+    CHECK( (new Let("x", new Add(new Var("x"), new Num(8)), new Add(new Var("x"), new Num(3))))->subst("x", new Num(4))
+                   ->equals(new Let("x", new Add(new Num(4), new Num(8)), new Add(new Var("x"), new Num(3)))) );
+    //Tests substitution of 'y' in the rhs of a Let expression when 'y' is different from the bound variable 'x'.
+    CHECK( (new Let("x", new Add(new Var("y"), new Num(8)), new Add(new Var("x"), new Num(3))))->subst("y", new Num(4))
+                   ->equals(new Let("x", new Add(new Num(4), new Num(8)), new Add(new Var("x"), new Num(3)))) );
+    //Tests substitution of 'y' in the body of a Let expression when 'y' is different from the bound variable 'x', and 'y' is part of a nested addition.
+    CHECK( (new Let("x", new Num(6), new Add(new Var("x"), new Add(new Var("y"), new Num(7)))))->subst("y", new Num(4))
+                   ->equals(new Let("x", new Num(6), new Add(new Var("x"), new Add(new Num(4), new Num(7))))) );
+
+}
+
+TEST_CASE("Interp") {
+    //Add
+    CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))))->interp() == 30);
+    //Mult
+    CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
+    //Nested in right argument of multiplication expression
+    CHECK ((new Mult(new Mult(new Num(2), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
+                     new Num(3)))->interp() == 36);
+    //Variable is unchanged.
+    CHECK_THROWS_WITH (
+            (new Add(new Let("x", new Num(3), new Let("y", new Num(3), new Add(new Var("y"), new Num(2)))),
+                     new Var("x")))->interp(), "Variable has no value");
+    //Lhs Add
+    CHECK ((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->interp() == 15);
+}
+
+TEST_CASE("Let Print()") {
+    std::ostringstream os;
+
+    SECTION("Printing simple Let expression") {
+        Let expr("x", new Num(5), new Var("x"));
+        expr.print(os);
+        CHECK(os.str() == "(_let x = 5 _in x)");
+    }
+
+    SECTION("Printing nested Let expressions") {
+        Let expr("x", new Num(5), new Let("y", new Num(10), new Var("y")));
+        //Clear the stream
+        os.str("");
+        expr.print(os);
+        CHECK(os.str() == "(_let x = 5 _in (_let y = 10 _in y))");
+    }
+
+    SECTION("Let expression with arithmetic") {
+        Let expr("x", new Num(5), new Add(new Var("x"), new Num(3)));
+        //Clear the stream
+        os.str("");
+        expr.print(os);
+        CHECK(os.str() == "(_let x = 5 _in (x + 3))");
+    }
+
+    SECTION("Complex Let expression") {
+        Let expr("x", new Add(new Num(2), new Num(3)), new Mult(new Var("x"), new Num(4)));
+        //Clear the stream
+        os.str("");
+        expr.print(os);
+        CHECK(os.str() == "(_let x = (2 + 3) _in (x * 4))");
+    }
+}
 
 //Ben from Nabil
-TEST_CASE("Pretty Print") {
+TEST_CASE("Let Pretty Print") {
 
 //Let nested as right argument of parenthesized multiplication expression
 CHECK ((new Mult(new Mult(new Num(2), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
