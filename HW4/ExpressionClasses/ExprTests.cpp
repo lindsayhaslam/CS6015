@@ -7,8 +7,8 @@
  * It includes tests for equality checks, interpretation (evaluation), variable presence checks, substitution, and pretty printing functionalities of arithmetic expressions. Each test case is designed to verify the correct behavior of the classes and their interactions, ensuring that expressions are correctly manipulated and evaluated according to the rules of arithmetic and variable substitution.
  */
 #include "catch.h"
-#include <stdio.h>
 #include "Expr.h"
+#include "parse.hpp"
 
 
 //**********VAR TESTS********//
@@ -367,7 +367,7 @@ TEST_CASE("Let Pretty Print") {
 //Let nested as right argument of parenthesized multiplication expression
 CHECK ((new Mult(new Mult(new Num(2), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
                  new Num(3)))->to_pretty_string() == "(2 * _let x = 5\n"
-                                                "      _in  x + 1) * 3");
+                                                "       _in  x + 1) * 3");
 //Let nested to the left in add expression which is nested to the right within a multiplication expression
 CHECK((new Mult(new Num(5), new Add(new Let("x", new Num(5), new Var("x")), new Num(1))))->to_pretty_string() ==
       "5 * ((_let x = 5\n"
@@ -388,13 +388,13 @@ CHECK((new Add(new Mult(new Num(4), new Let("x", new Num(5), new Add(new Var("x"
 CHECK ((new Add(new Let("x", new Num(3), new Let("y", new Num(3), new Add(new Var("y"), new Num(2)))),
                 new Var("x")))->to_pretty_string() == "(_let x = 3\n"
                                                       "  _in  _let y = 3\n"
-                                                      "       _in  y + 2) + x");
+                                                      "        _in  y + 2) + x");
 //Let nested in lhs of Add expression nested within body of let expression
 CHECK((new Let("x", new Num(5),
                    new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))
               ->to_pretty_string() == "_let x = 5\n"
-                                 " _in  (_let y = 3\n"
-                                 "       _in  y + 2) + x");
+                                 "  _in  (_let y = 3\n"
+                                 "        _in  y + 2) + x");
 //Triple nested let
 CHECK((new Let("x", new Num(5),
                    new Add(new Let("y", new Num(3),
@@ -402,11 +402,52 @@ CHECK((new Let("x", new Num(5),
                                                                               new Add(new Var("a"), new Num(8))))),
                            new Var("x"))))
               ->to_pretty_string() == "_let x = 5\n"
-                                 " _in  (_let y = 3\n"
-                                 "       _in  y + _let z = 6\n"
-                                 "                _in  a + 8) + x");
+                                 "  _in  (_let y = 3\n"
+                                 "        _in  y + _let z = 6\n"
+                                 "                  _in  a + 8) + x");
 }
 
+
+TEST_CASE("parse") {
+    CHECK_THROWS_WITH( parse_str("()"), "Invalid Input!" );
+
+    CHECK( parse_str("(1)")->equals(new Num(1)) );
+    CHECK( parse_str("(((1)))")->equals(new Num(1)) );
+
+    CHECK_THROWS_WITH( parse_str("(1"), "Missing close parenthesis!" );
+
+    CHECK( parse_str("1")->equals(new Num(1)) );
+    CHECK( parse_str("10")->equals(new Num(10)) );
+    CHECK( parse_str("-3")->equals(new Num(-3)) );
+    CHECK( parse_str("  \n 5  ")->equals(new Num(5)) );
+    CHECK_THROWS_WITH( parse_str("-"), "Invalid Input!" );
+
+    CHECK_THROWS_WITH( parse_str(" -   5  "), "Invalid Input!" );
+
+    CHECK( parse_str("x")->equals(new Var("x")) );
+    CHECK( parse_str("xyz")->equals(new Var("xyz")) );
+    CHECK( parse_str("xYz")->equals(new Var("xYz")) );
+    CHECK_THROWS_WITH( parse_str("x_z"), "Invalid Input!" );
+
+    CHECK( parse_str("x + y")->equals(new Add(new Var("x"), new Var("y"))) );
+
+    CHECK( parse_str("x * y")->equals(new Mult(new Var("x"), new Var("y"))) );
+
+    CHECK( parse_str("z * x + y")
+                   ->equals(new Add(new Mult(new Var("z"), new Var("x")),
+                                    new Var("y"))) );
+
+    CHECK( parse_str("z * (x + y)")
+                   ->equals(new Mult(new Var("z"),
+                                     new Add(new Var("x"), new Var("y"))) ));
+
+    //Let Tests
+    CHECK(parse_str("_let x=5 _in x")->equals(new Let("x", new Num(5), new Var("x"))));
+    CHECK(parse_str("_let x=5 _in (x+10)")->interp() == 15);
+    CHECK(parse_str("_let x=5 _in (_let y=x+2 _in y+3)")->interp() == 10);
+    CHECK(parse_str("_let x=3 _in x*3")->interp() == 9);
+    CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp() == 5);
+}
 
 
 

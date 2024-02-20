@@ -9,11 +9,16 @@
 #include <cstring>
 #include <iostream>
 
-//class cmdline: public main {
-//
-//};
+typedef enum {
+    do_tests,
+    do_nothing,
+    do_help,
+    do_interp,
+    do_print,
+    do_pretty_print,
+} run_mode_t;
 
-void use_arguments(int argc, char **argv);
+run_mode_t use_arguments(int argc, char **argv);
 
 
 #endif //HW1_CMDLINE_H

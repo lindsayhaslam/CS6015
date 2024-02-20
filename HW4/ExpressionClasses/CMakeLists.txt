@@ -9,4 +9,6 @@ add_executable(ExpressionClasses main.cpp
         catch.h
         ExprTests.cpp
         ExprTests.h
+        parse.cpp
+        parse.hpp
 )
