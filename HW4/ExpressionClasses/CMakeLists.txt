@@ -13,4 +13,6 @@ add_executable(ExpressionClasses main.cpp
         parse.hpp
         test_msdscript.cpp
         test_msdscript.h
+        Val.cpp
+        Val.h
 )

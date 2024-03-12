@@ -7,9 +7,4 @@
 
 static std::string random_expr_string();
 
-class test_msdscript {
-   std::string random_expr_string();
-};
-
-
 #endif //EXPRESSIONCLASSES_TEST_MSDSCRIPT_H

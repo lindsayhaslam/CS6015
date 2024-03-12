@@ -16,6 +16,7 @@
 #include <sstream>
 
 using namespace std;
+class Val;
 
 typedef enum {
     prec_none,      // = 0
@@ -26,8 +27,8 @@ typedef enum {
 class Expr {
 public:
     virtual bool equals(Expr *e) = 0;
-    virtual int interp() = 0;
-    virtual bool has_variable()  = 0;
+    virtual Val* interp() = 0;
+    virtual bool has_variable()= 0;
     virtual Expr* subst(string varName, Expr* replacement)  = 0;
     virtual void print (ostream& os) = 0;
     string to_string();
@@ -42,7 +43,7 @@ public:
     Num(int val);
     bool equals(Expr *e);
     //Return the value
-    int interp();
+    virtual Val* interp();
     //Num will never have a variable.
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
@@ -55,7 +56,7 @@ public:
     string name;
     Var(string name);
     virtual bool equals(Expr *e);
-    virtual int interp();
+    virtual Val* interp();
     //Will have a variable.
     virtual bool has_variable();
     virtual Expr* subst(string varName, Expr* replacement);
@@ -68,7 +69,7 @@ public:
     Add(Expr *lhs, Expr *rhs);
     bool equals(Expr *e);
     //Sum of the subexpression values
-    int interp();
+    Val* interp();
     //Check if either have a variable
     bool has_variable();
     Expr* subst( string varName, Expr* replacement);
@@ -82,7 +83,7 @@ public:
     Mult(Expr *lhs, Expr *rhs);
     bool equals(Expr *e);
     //The product of the subexpression values
-    int interp();
+    Val* interp();
     //Check if either have a variable
     bool has_variable();
     Expr* subst(string varName, Expr* replacement);
@@ -98,7 +99,7 @@ public:
     Let(string lhs, Expr* rhs, Expr* bodyExpr);
     virtual bool equals(Expr *e);
     //The product of the subexpression values
-    virtual int interp();
+    virtual Val* interp();
     //Check if either have a variable
     virtual bool has_variable();
     virtual Expr* subst(string varName, Expr* replacement);

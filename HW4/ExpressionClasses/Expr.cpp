@@ -7,6 +7,7 @@
  */
 
 #include "Expr.h"
+#include "Val.h"
 
 //using namespace std;
 
@@ -61,8 +62,8 @@ bool Num::equals(Expr *e) {
  * \brief the interp() function for Num class.
  * \return the integer val of Num object.
  */
-int Num::interp() {
-    return val;
+Val* Num::interp() {
+    return new NumVal(val);
 }
 
 /**
@@ -123,8 +124,10 @@ bool Var::equals(Expr *e) {
  * \brief the interp() function for Var class.
  * \return runtime error.
  */
-int Var::interp() {
+Val* Var::interp() {
     throw std::runtime_error("Variable has no value");
+
+    return new NumVal(-1);
 }
 
 /**
@@ -193,8 +196,8 @@ bool Add::equals(Expr *e) {
  * \brief the interp() function for Add class.
  * \return lefthand side and righthand side with the Interp() method.
  */
-int Add::interp() {
-    return lhs->interp() + rhs->interp();
+Val* Add::interp() {
+    return this->lhs->interp()->add_to(this->rhs->interp());
 }
 
 /**
@@ -275,8 +278,8 @@ bool Mult::equals(Expr *e) {
  * \brief Evaluates the multiplication expression.
  * \return The product of the interpretations of lhs and rhs.
  */
-int Mult::interp() {
-    return lhs->interp() * rhs->interp();
+Val* Mult::interp() {
+    return this->lhs->interp()->mult_with(this->rhs->interp());
 }
 
 /**
@@ -350,11 +353,9 @@ bool Let::equals(Expr *e){
     }
 }
 
-int Let::interp() {
-    int rhsValue = rhs->interp();
-    Expr *substitutedBody = bodyExpr->subst(lhs, new Num(rhsValue));
-    int result = substitutedBody->interp();
-    return result;
+Val* Let::interp() {
+    Val* rhsValue = rhs->interp();
+    return bodyExpr->subst(lhs, rhsValue->to_expr())->interp();
 }
 
 Expr *Let::subst(string varName, Expr *replacement) {
@@ -377,6 +378,8 @@ void Let::print(ostream &os) {
 
 void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos){
     //Calculate the indentation based on stream positions
+
+    //Move these two lines underneath the if statement
     streampos currentPos = os.tellp();
     streampos indentSize = currentPos - strmpos;
     if (let_parent) {
@@ -384,6 +387,7 @@ void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, strea
     }
 
     //Print the "let" part
+    //All streampos should go where IndentSize is
     os << "_let " << lhs << " = ";
     rhs->pretty_print_at(os, prec_none, false, indentSize);
 

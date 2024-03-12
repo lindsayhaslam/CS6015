@@ -4,12 +4,12 @@ CXX = c++
 ARGUMENTS = --test --help
 CFLAGS = --std=c++11
 LINKER = -o
-CXXSOURCE = main.cpp cmdline.cpp Expr.cpp ExprTests.cpp parse.cpp
-HEADERS = cmdline.h catch.h ExprTests.h Expr.h parse.hpp 
+CXXSOURCE = main.cpp cmdline.cpp Expr.cpp ExprTests.cpp parse.cpp Val.cpp
+HEADERS = cmdline.h catch.h ExprTests.h Expr.h parse.hpp Val.h
 
 msdscript: $(CXXSOURCE) $(HEADERS)
 		 $(CXX) $(CFLAGS) -c $(CXXSOURCE)
-		 $(CXX) $(CFLAGS) main.o cmdline.o Expr.o ExprTests.o parse.o $(LINKER) msdscript
+		 $(CXX) $(CFLAGS) main.o cmdline.o Expr.o ExprTests.o parse.o Val.o $(LINKER) msdscript
 
 .PHONY: clean
 clean:

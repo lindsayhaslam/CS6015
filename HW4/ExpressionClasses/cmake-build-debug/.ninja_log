@@ -1,16 +1,7 @@
 # ninja log v5
-4	259	1708118426997233490	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	9475e2160b829c7
-17	2120	1708447103597274853	CMakeFiles/ExpressionClasses.dir/main.cpp.o	b9708fc5ac065cd5
-18	473	1708447101957653525	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	7b7ed36ecdbcea7d
-2037	2093	1705606634005776658	ExpressionClasses	55aa78d346ceff81
-18	320	1708447101803828394	CMakeFiles/ExpressionClasses.dir/parse.cpp.o	84a271ba2f584ec
-6	529	1708967861001240220	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
-6	538	1708967861009517584	CMakeFiles/ExpressionClasses.dir/parse.cpp.o	84a271ba2f584ec
 6	540	1708967861013150556	CMakeFiles/ExpressionClasses.dir/Expr.cpp.o	9475e2160b829c7
-6	715	1708967861188636167	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	7b7ed36ecdbcea7d
 6	2375	1708967862840550228	CMakeFiles/ExpressionClasses.dir/main.cpp.o	b9708fc5ac065cd5
-4	233	1708967889303455405	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
-4	220	1708968064712434206	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
-4	229	1708968305405760412	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
-6	437	1708972728184489300	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
+6	715	1708967861188636167	CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o	7b7ed36ecdbcea7d
 7	226	1708972740843173207	CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o	32fb967504c6a9d7
+2037	2093	1705606634005776658	ExpressionClasses	55aa78d346ceff81
+6	538	1708967861009517584	CMakeFiles/ExpressionClasses.dir/parse.cpp.o	84a271ba2f584ec

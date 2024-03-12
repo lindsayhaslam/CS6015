@@ -37,33 +37,6 @@ static std::string random_expr_string(int depth = 0){
     }
 }
 
-//Random Num (these all just generate)
-//Random Var
-//Random_add (random expr generator)
-//***Switch case for random expr generator (see lecture), randomize logic from slide 22.
-//OneCommand method from the slides (Lecture 13, slide 28 comparison against yourself).
-//Slide 29 is for against another script, these are two separate methods.
-//Main should test
-
-//Generate a random expression string
-//Generate a random let body
-//Generate a random variable
-
-//Call random string expression, and run the code from his slides
-//This is for the comparisons, when arg == 2
-//If Argc == 3, then we are doing comparisons.
-//etc.
-//Copy and paste for 28, add prettyprint, copy the print result and interp_again_result, and then change those to pretty print.
-//Create two functions
-//Comparing against yourself, is two arguments.
-//Comparing against two others, there are three arguments.
-
-//This is mostly ready for comparing against two others.//This is two commands but is taking three for comparison between two
-//I need OneCommands, which is argv[1] for everything. Copy from slide 28. Change "msdscript" to argv[1]. Then add a pretty print.
-//Everything in the for loop is in the slides. Add a pretty print const char.
-//Copy and paste print_result and interp_again result, but swap print_result with prettyPrint_result.
-
-
 int main (int argc, const char **argv){
 
     srand(static_cast<unsigned int>(time(0)));
@@ -131,36 +104,9 @@ int main (int argc, const char **argv){
 
     }
 
-        //catch if the input is invalid
+        //The input is invalid.
     else{
         cerr << "Usage: test_msdscript <msdscript_path> or test_msdscript <msdscript_path_1> <msdscript_path_2>";
         return 1;
     }
 }
-
-//    //Comparing three arguments (scripts against each other)
-//    const char *const interp1_argv[] = {argv[1], "--interp"};
-//    //Change this to the second slide
-//    const char *const interp2_argv[] = {argv[2], "--interp"};
-//    //Do the same thing for print and pretty print
-//
-//
-//    //Incorporate for pretty print
-//
-//    //Copy and paste the two lines (inerpt_result) and (interp_then change them to prettyPrint_results.
-//    //Copy and paste the two interp_again_resultPP.
-//
-//    for (int i = 0; i < 100; i++){
-//        string in = random_expr_string();
-//        std::cout << "Trying " << in << "\n";
-//
-//        ExecResult interp1_result = exec_program(2, interp1_argv, in);
-//        ExecResult interp2_result = exec_program(2, interp2_argv, in);
-//        //Then do the same thing for print and pretty print.
-//        //Copy and paste the below, but change interp_again_resultPP.
-//        if (interp1_result.out != interp2_result.out){
-//            throw runtime_error("Different results!");
-//        }
-//    }
-//    return 0;
-//}

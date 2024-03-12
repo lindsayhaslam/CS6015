@@ -8,6 +8,7 @@
  */
 #include "catch.h"
 #include "Expr.h"
+#include "Val.h"
 #include "parse.hpp"
 
 
@@ -64,15 +65,16 @@ TEST_CASE("Expr Add") {
     //Test with one operand being negative
     CHECK((new Add(new Num(2), new Num(-3)))->equals(new Add(new Num(2), new Num(-3))) == true);
     //Test from HW3
-    CHECK((new Add(new Add(new Num(10), new Num(15)), new Add(new Num(20), new Num(20))))->interp() == 65);
+    CHECK( (new Add(new Add(new Num(100), new Num(100)),new Add(new Num(200),new Num(200))))
+                   ->interp()->equals(new NumVal(600)));
 }
 
 TEST_CASE("Add Interp") {
-    CHECK((new Add(new Num(3), new Num(2)))->interp() == 5);
-    CHECK((new Add(new Num(5), new Num(-4)))->interp() == 1);
-    CHECK((new Add(new Num(-3), new Num(3)))->interp() == 0);
-    CHECK((new Add(new Num(-3), new Num(-3)))->interp() == -6);
-    CHECK((new Add(new Num(0), new Num(10)))->interp() == 10);
+    CHECK((new Add(new Num(3), new Num(2)))->interp()->equals(new NumVal(5)));
+    CHECK((new Add(new Num(5), new Num(-4)))->interp()->equals(new NumVal(1)));
+    CHECK((new Add(new Num(-3), new Num(3)))->interp()->equals(new NumVal(0)));
+    CHECK((new Add(new Num(-3), new Num(-3)))->interp()->equals(new NumVal(-6)));
+    CHECK((new Add(new Num(0), new Num(10)))->interp()->equals(new NumVal(10)));
 }
 
 TEST_CASE("Add Has Variable") {
@@ -84,11 +86,11 @@ TEST_CASE("Add Has Variable") {
 }
 
 TEST_CASE("Add Subst") {
-    CHECK((new Add(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp() == 8);
-    CHECK((new Add(new Num(3), new Var("x")))->subst("x", new Num(2))->interp() == 5);
-    CHECK((new Add(new Num(-1), new Var("x")))->subst("x", new Num(2))->interp() == 1);
-    CHECK((new Add(new Var("x"), new Var("x")))->subst("x", new Num(3))->interp() == 6);
-    CHECK((new Add(new Var("y"), new Var("z")))->subst("y", new Num(3))->subst("z", new Num(2))->interp() == 5);
+    CHECK((new Add(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp()->equals(new NumVal(8)));
+    CHECK((new Add(new Num(3), new Var("x")))->subst("x", new Num(2))->interp()->equals(new NumVal(5)));
+    CHECK((new Add(new Num(-1), new Var("x")))->subst("x", new Num(2))->interp()->equals(new NumVal( 1)));
+    CHECK((new Add(new Var("x"), new Var("x")))->subst("x", new Num(3))->interp()->equals(new NumVal(6)));
+    CHECK((new Add(new Var("y"), new Var("z")))->subst("y", new Num(3))->subst("z", new Num(2))->interp()->equals(new NumVal(5)));
 }
 
 
@@ -108,11 +110,11 @@ TEST_CASE("Expr Num") {
 }
 
 TEST_CASE("Num Interp") {
-    CHECK((new Num(3))->interp() == 3);
-    CHECK((new Num(5))->interp() == 5);
-    CHECK((new Num(-18))->interp() == -18);
-    CHECK((new Num(-3))->interp() == -3);
-    CHECK((new Num(0))->interp() == 0);
+    CHECK((new Num(3))->interp()->equals(new NumVal(3)));
+    CHECK((new Num(5))->interp()->equals(new NumVal(5)));
+    CHECK((new Num(-18))->interp()->equals(new NumVal(-18)));
+    CHECK((new Num(-3))->interp()->equals(new NumVal(-3)));
+    CHECK((new Num(0))->interp()->equals(new NumVal(0)));
 }
 
 TEST_CASE("Num Has Variable") {
@@ -141,11 +143,11 @@ TEST_CASE("Expr Mult") {
 }
 
 TEST_CASE("Mult Interp") {
-    CHECK((new Mult(new Num(3), new Num(2)))->interp() == 6);
-    CHECK((new Mult(new Num(5), new Num(4)))->interp() == 20);
-    CHECK((new Mult(new Num(-3), new Num(6)))->interp() == -18);
-    CHECK((new Mult(new Num(-3), new Num(-3)))->interp() == 9);
-    CHECK((new Mult(new Num(0), new Num(10)))->interp() == 0);
+    CHECK((new Mult(new Num(3), new Num(2)))->interp()->equals(new NumVal(6)));
+    CHECK((new Mult(new Num(5), new Num(4)))->interp()->equals(new NumVal(20)));
+    CHECK((new Mult(new Num(-3), new Num(6)))->interp()->equals(new NumVal(-18)));
+    CHECK((new Mult(new Num(-3), new Num(-3)))->interp()->equals(new NumVal(9)));
+    CHECK((new Mult(new Num(0), new Num(10)))->interp()->equals(new NumVal(0)));
 }
 
 TEST_CASE("Mult Has Variable") {
@@ -157,11 +159,11 @@ TEST_CASE("Mult Has Variable") {
 }
 
 TEST_CASE("Mult Subst") {
-    CHECK((new Mult(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp() == 15);
-    CHECK((new Mult(new Num(3), new Var("x")))->subst("x", new Num(2))->interp() == 6);
-    CHECK((new Mult(new Num(-1), new Var("x")))->subst("x", new Num(2))->interp() == -2);
-    CHECK((new Mult(new Var("x"), new Var("x")))->subst("x", new Num(3))->interp() == 9);
-    CHECK((new Mult(new Var("y"), new Var("z")))->subst("y", new Num(3))->subst("z", new Num(2))->interp() == 6);
+    CHECK((new Mult(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp()->equals(new NumVal(15)));
+    CHECK((new Mult(new Num(3), new Var("x")))->subst("x", new Num(2))->interp()->equals(new NumVal(6)));
+    CHECK((new Mult(new Num(-1), new Var("x")))->subst("x", new Num(2))->interp()->equals(new NumVal(-2)));
+    CHECK((new Mult(new Var("x"), new Var("x")))->subst("x", new Num(3))->interp()->equals(new NumVal(9)));
+    CHECK((new Mult(new Var("y"), new Var("z")))->subst("y", new Num(3))->subst("z", new Num(2))->interp()->equals(new NumVal(6)));
 }
 
 
@@ -288,11 +290,11 @@ TEST_CASE("Let equals()") {
 
 TEST_CASE("Let Subst") {
     //Tests that substituting 'x' with a new number in a Let expression where 'x' is both the bound variable and in the body doesn't affect the body due to shadowing rules.
-    CHECK((new Let("x", new Num(5), new Var("x")))->subst("x", new Num(10))->interp() == 5); //No substitution in bodyExpr due to shadowing
+    CHECK((new Let("x", new Num(5), new Var("x")))->subst("x", new Num(10))->interp()->equals(new NumVal(5))); //No substitution in bodyExpr due to shadowing
     //Tests that substituting 'y' (not the bound variable) in the rhs of a Let expression affects the final interpretation correctly.
-    CHECK((new Let("x", new Var("y"), new Add(new Var("x"), new Num(3))))->subst("y", new Num(5))->interp() == 8); // Substitution in rhs
+    CHECK((new Let("x", new Var("y"), new Add(new Var("x"), new Num(3))))->subst("y", new Num(5))->interp()->equals(new NumVal(8))); // Substitution in rhs
     //Tests that substituting 'y' (not the bound variable) in both the rhs and the body of a Let expression affects the final interpretation correctly.
-    CHECK((new Let("x", new Add(new Var("y"), new Num(2)), new Add(new Var("x"), new Var("y"))))->subst("y", new Num(10))->interp() == 22); //Substitution in rhs and bodyExpr
+    CHECK((new Let("x", new Add(new Var("y"), new Num(2)), new Add(new Var("x"), new Var("y"))))->subst("y", new Num(10))->interp()->equals(new NumVal(22))); //Substitution in rhs and bodyExpr
     //Tests that substituting 'x' with a new number does not affect the Let expression when 'x' is the bound variable, demonstrating shadowing.
     CHECK( (new Let("x", new Num(5), new Add(new Var("x"), new Num(5))))->subst("x", new Num(4))
                    ->equals( new Let("x", new Num(5), new Add(new Var("x"), new Num(5)))));
@@ -313,18 +315,18 @@ TEST_CASE("Let Subst") {
 
 TEST_CASE("Interp") {
     //Add
-    CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))))->interp() == 30);
+    CHECK((new Mult(new Num(5), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))))->interp()->equals(new NumVal(30)));
     //Mult
-    CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp() == 26);
+    CHECK((new Add(new Mult(new Num(5), new Let("x", new Num(5), new Var("x"))), new Num(1)))->interp()->equals(new NumVal(26)));
     //Nested in right argument of multiplication expression
     CHECK ((new Mult(new Mult(new Num(2), new Let("x", new Num(5), new Add(new Var("x"), new Num(1)))),
-                     new Num(3)))->interp() == 36);
+                     new Num(3)))->interp()->equals(new NumVal(36)));
     //Variable is unchanged.
     CHECK_THROWS_WITH (
             (new Add(new Let("x", new Num(3), new Let("y", new Num(3), new Add(new Var("y"), new Num(2)))),
                      new Var("x")))->interp(), "Variable has no value");
     //Lhs Add
-    CHECK ((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->interp() == 15);
+    CHECK ((new Add(new Let("x", new Num(2), new Add(new Var("x"), new Num(9))), new Num(4)))->interp()->equals(new NumVal(15)));
 }
 
 TEST_CASE("Let Print()") {
@@ -443,10 +445,10 @@ TEST_CASE("parse") {
 
     //Let Tests
     CHECK(parse_str("_let x=5 _in x")->equals(new Let("x", new Num(5), new Var("x"))));
-    CHECK(parse_str("_let x=5 _in (x+10)")->interp() == 15);
-    CHECK(parse_str("_let x=5 _in (_let y=x+2 _in y+3)")->interp() == 10);
-    CHECK(parse_str("_let x=3 _in x*3")->interp() == 9);
-    CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp() == 5);
+    CHECK(parse_str("_let x=5 _in (x+10)")->interp()->equals(new NumVal(15)));
+    CHECK(parse_str("_let x=5 _in (_let y=x+2 _in y+3)")->interp()->equals(new NumVal(10)));
+    CHECK(parse_str("_let x=3 _in x*3")->interp()->equals(new NumVal(9)));
+    CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp()->equals(new NumVal(5)));
 }
 
 
