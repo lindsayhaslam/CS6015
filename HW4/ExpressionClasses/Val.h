@@ -30,6 +30,19 @@ public:
     virtual Val* add_to(Val* other_val);
     virtual Val* mult_with(Val* other_val);
     virtual void print (ostream &ostream);
+    virtual Val* is_true();
+};
+
+class BoolVal : public Val {
+public:
+    bool val;
+    BoolVal(bool b);
+    virtual Expr* to_expr();
+    virtual bool equals (Val *v);
+    virtual Val* add_to(Val* other_val);
+    virtual Val* mult_with(Val* other_val);
+    virtual void print (ostream &ostream);
+    virtual bool is_true();
 };
 
 

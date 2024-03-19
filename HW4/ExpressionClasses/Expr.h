@@ -107,5 +107,46 @@ public:
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
+class BoolExpr : public Expr {
+public:
+    bool val;
+    BoolExpr(bool b);
+    virtual bool equals (Expr *e);
+    virtual Val* interp();
+    virtual bool has_variable();
+    virtual Expr* subst(string varName, Expr* replacement);
+    virtual void print (ostream& os);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
+};
+
+class IfExpr : public Expr {
+public:
+    Expr* if_;
+    Expr* then_;
+    Expr* else_;
+    IfExpr(Expr* if_, Expr* then_, Expr* else_);
+
+    virtual bool equals (Expr *e);
+    virtual Val* interp();
+    virtual bool has_variable();
+    virtual Expr* subst(string varName, Expr* replacement);
+    virtual void print (ostream& os);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
+};
+
+class EqExpr : public Expr {
+public:
+    Expr* rhs;
+    Expr* lhs;
+
+    EqExpr(Expr* rhs, Expr* lhs);
+    virtual bool equals (Expr *e);
+    virtual Val* interp();
+    virtual bool has_variable();
+    virtual Expr* subst(string varName, Expr* replacement);
+    virtual void print (ostream& os);
+    void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
+};
+
 #endif //EXPRESSIONCLASSES_EXPR_H
 

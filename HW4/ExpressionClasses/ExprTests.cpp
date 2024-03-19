@@ -451,6 +451,391 @@ TEST_CASE("parse") {
     CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp()->equals(new NumVal(5)));
 }
 
+TEST_CASE("Testing NumVal") {
+
+    SECTION("to_expr"){
+        CHECK( (new NumVal(1))->to_expr()->equals((new Num(1)))==true);
+        CHECK( (new NumVal(1))->to_expr()->equals((new Num(2)))==false);
+    }
+
+    SECTION("equals"){
+        CHECK( (new NumVal(1))->equals(new NumVal(1))==true );
+        CHECK( (new NumVal(1))->equals(new NumVal(2))==false );
+    }
+
+    SECTION("add_to"){
+        Val* result = (new NumVal(5))->add_to(new NumVal(10));
+        CHECK(result->to_string()=="15");
+
+        Val* result2 = (new NumVal(-1))->add_to(new NumVal(-1));
+        CHECK(result2->to_string()=="-2");
+
+        Val* result3 = (new NumVal(0))->add_to(new NumVal(0));
+        CHECK(result3->to_string()=="0");
+
+        NumVal a(5);
+        Val* nonNumVal = reinterpret_cast<Val*>(new Let("x", new Num(1), new Num(1)));
+        REQUIRE_THROWS_AS(a.add_to(nonNumVal), runtime_error);
+
+    }
+
+    SECTION("mult_with"){
+        Val* result = (new NumVal(5))->mult_with(new NumVal(10));
+        CHECK(result->to_string()=="50");
+
+        Val* result2 = (new NumVal(-1))->mult_with(new NumVal(1));
+        CHECK(result2->to_string()=="-1");
+
+        Val* result3 = (new NumVal(0))->mult_with(new NumVal(0));
+        CHECK(result3->to_string()=="0");
+
+        NumVal a(5);
+        Val* nonNumVal = reinterpret_cast<Val*>(new Let("x", new Num(1), new Num(1)));
+        REQUIRE_THROWS_AS(a.mult_with(nonNumVal), runtime_error);
+    }
+
+    SECTION("print"){
+        NumVal numVal(123);
+        NumVal numVal2(1);
+        ostringstream output;
+        numVal.print(output);
+        CHECK(output.str() == "123");
+
+        ostringstream output2;
+        numVal2.print(output2);
+        CHECK(output2.str() == "1");
+    }
+}
+
+TEST_CASE("Testing BoolVal") {
+
+    SECTION("constructor/print") {
+        BoolVal trueVal(true);
+        BoolVal falseVal(false);
+        ostringstream outputTrue, outputFalse;
+
+        trueVal.print(outputTrue);
+        falseVal.print(outputFalse);
+
+        CHECK(outputTrue.str() == "1");
+        CHECK(outputFalse.str() == "0");
+    }
+
+    SECTION("to_expr"){
+        BoolVal boolVal(true);
+        Expr* expr = boolVal.to_expr();
+        ostringstream output;
+        expr->print(output);
+        CHECK(output.str() == "_true");
+
+        BoolVal boolVal2(false);
+        Expr* expr2 = boolVal2.to_expr();
+        ostringstream output2;
+        expr2->print(output2);
+        CHECK(output2.str() == "_false");
+    }
+
+    SECTION("equals") {
+        CHECK( (new BoolVal(true))->equals(new BoolVal(true))==true );
+        CHECK( (new BoolVal(true))->equals(new BoolVal(false))==false );
+    }
+
+    SECTION("add_to") {
+        BoolVal boolVal(true);
+        BoolVal anotherBoolVal(false);
+
+        REQUIRE_THROWS_AS(boolVal.add_to(&anotherBoolVal), runtime_error);
+    }
+
+    SECTION("mult_with") {
+        REQUIRE_THROWS_AS((new BoolVal(true))->mult_with(new BoolVal(false)), runtime_error);
+    }
+}
+
+TEST_CASE("Testing BoolExpr") {
+
+    SECTION("constructor + print"){
+        BoolExpr trueExpr(true);
+        BoolExpr falseExpr(false);
+        ostringstream outputTrue, outputFalse;
+
+        trueExpr.print(outputTrue);
+        falseExpr.print(outputFalse);
+
+        CHECK( outputTrue.str() == "_true" );
+        CHECK( outputFalse.str() == "_false" );
+    }
+
+    SECTION("equals") {
+        CHECK( (new BoolExpr(true))->equals(new BoolExpr(true)) );
+        CHECK_FALSE( (new BoolExpr(true))->equals(new BoolExpr(false)) );
+    }
+
+    SECTION("interp") {
+        BoolExpr boolExpr(true);
+        Val* val = boolExpr.interp();
+        BoolVal* boolVal = dynamic_cast<BoolVal*>(val);
+
+        REQUIRE(boolVal != nullptr); // Ensure it's a BoolVal
+        ostringstream output;
+        boolVal->print(output);
+//        REQUIRE(output.str() == "1"); // Assuming print outputs "1" for true BoolVals
+//
+//        CHECK(new BoolExpr(true)->interp()->equals(new boolVal(true)));
+//        CHECK(new BoolExpr(false)->interp()==0);
+    }
+
+}
+
+TEST_CASE("Testing IfExpr") {
+    SECTION("pretty_print"){
+
+        CHECK( (new IfExpr(new EqExpr(new Var("x"), new Num(1)), new Num(1), new Num(2)))->to_pretty_string()
+               ==
+               "_if x==1\n"
+               "_then 1\n"
+               "_else 2\n" );
+    }
+    SECTION("IfExpr Subst"){
+        Var* varX = new Var("x");
+        Num* num1 = new Num(1);
+        Num* num2 = new Num(2);
+        Var* varY = new Var("y");
+
+        //Test substitution in the `if_` part
+        IfExpr* ifExpr1 = new IfExpr(varX, num1, num2);
+        Expr* substitutedIfExpr1 = ifExpr1->subst("x", varY);
+        ostringstream output1;
+        substitutedIfExpr1->print(output1);
+        CHECK(output1.str() == "_if y_then 1_else 2");
+
+        //Test substitution in the `then_` part
+        IfExpr* ifExpr2 = new IfExpr(num1, varX, num2);
+        Expr* substitutedIfExpr2 = ifExpr2->subst("x", varY);
+        ostringstream output2;
+        substitutedIfExpr2->print(output2);
+        CHECK(output2.str() == "_if 1_then y_else 2");
+
+        //Test substitution in the `else_` part
+        IfExpr* ifExpr3 = new IfExpr(num1, num2, varX);
+        Expr* substitutedIfExpr3 = ifExpr3->subst("x", varY);
+        ostringstream output3;
+        substitutedIfExpr3->print(output3);
+        CHECK(output3.str() == "_if 1_then 2_else y");
+
+        //Cleanup dynamically allocated memory
+        delete ifExpr1;
+        delete substitutedIfExpr1;
+        delete ifExpr2;
+        delete substitutedIfExpr2;
+        delete ifExpr3;
+        delete substitutedIfExpr3;
+    }
+}
+
+TEST_CASE("IfExpr printing") {
+    auto ifExpr = new IfExpr(new Var("x"), new Num(1), new Num(2));
+    ostringstream output;
+    ifExpr->print(output);
+
+    SECTION("correctly formats the expression") {
+        CHECK(output.str() == "_if x_then 1_else 2");
+    }
+}
+
+TEST_CASE("IfExpr pretty printing respects line breaks and indentation") {
+    auto ifExpr = new IfExpr(new Var("x"), new Num(1), new Num(2));
+    ostringstream output;
+    streampos strmpos = 0;
+    ifExpr->pretty_print_at(output,prec_none, false, strmpos);
+
+    SECTION("includes line breaks and indentation for readability") {
+        CHECK(output.str() == "_if x\n_then 1\n_else 2\n");
+    }
+}
+
+TEST_CASE("IfExpr interpretation") {
+    auto trueCondition = new IfExpr(new BoolExpr(true), new Num(1), new Num(2));
+    auto falseCondition = new IfExpr(new BoolExpr(false), new Num(1), new Num(2));
+
+    SECTION("interprets `then_` branch for true condition") {
+        CHECK(dynamic_cast<NumVal*>(trueCondition->interp())->val == 1);
+    }
+
+    SECTION("interprets `else_` branch for false condition") {
+        CHECK(dynamic_cast<NumVal*>(falseCondition->interp())->val == 2);
+    }
+}
+
+TEST_CASE("IfExpr equality comparison") {
+    auto ifExpr1 = new IfExpr(new Var("x"), new Num(1), new Num(2));
+    auto ifExpr2 = new IfExpr(new Var("x"), new Num(1), new Num(2));
+    auto ifExpr3 = new IfExpr(new Var("y"), new Num(1), new Num(2)); // Different `if_`
+    auto ifExpr4 = new IfExpr(new Var("x"), new Num(3), new Num(2)); // Different `then_`
+    auto ifExpr5 = new IfExpr(new Var("x"), new Num(1), new Num(3)); // Different `else_`
+
+    SECTION("identical expressions are equal") {
+        CHECK(ifExpr1->equals(ifExpr2));
+    }
+
+    SECTION("different `if_` expressions are not equal") {
+        CHECK_FALSE(ifExpr1->equals(ifExpr3));
+    }
+
+    SECTION("different `then_` expressions are not equal") {
+        CHECK_FALSE(ifExpr1->equals(ifExpr4));
+    }
+
+    SECTION("different `else_` expressions are not equal") {
+        CHECK_FALSE(ifExpr1->equals(ifExpr5));
+    }
+}
+
+TEST_CASE("Testing BoolVal ") {
+    SECTION("constructor/print") {
+        BoolVal trueVal(true);
+        BoolVal falseVal(false);
+        ostringstream outputTrue, outputFalse;
+        trueVal.print(outputTrue);
+        falseVal.print(outputFalse);
+        CHECK(outputTrue.str() == "1");
+        CHECK(outputFalse.str() == "0");
+    }
+    SECTION("to_expr"){
+        BoolVal boolVal(true);
+        Expr* expr = boolVal.to_expr();
+        ostringstream output;
+        expr->print(output);
+        CHECK(output.str() == "_true");
+        BoolVal boolVal2(false);
+        Expr* expr2 = boolVal2.to_expr();
+        ostringstream output2;
+        expr2->print(output2);
+        CHECK(output2.str() == "_false");
+    }
+    SECTION("equals") {
+        CHECK( (new BoolVal(true))->equals(new BoolVal(true))==true );
+        CHECK( (new BoolVal(true))->equals(new BoolVal(false))==false );
+    }
+    SECTION("add_to") {
+        BoolVal boolVal(true);
+        BoolVal anotherBoolVal(false);
+        REQUIRE_THROWS_AS(boolVal.add_to(&anotherBoolVal), runtime_error);
+    }
+    SECTION("mult_with") {
+        REQUIRE_THROWS_AS((new BoolVal(true))->mult_with(new BoolVal(false)), runtime_error);
+    }
+}
+TEST_CASE("Testing BoolExpr ") {
+    SECTION("constructor, print"){
+        BoolExpr trueExpr(true);
+        BoolExpr falseExpr(false);
+        ostringstream outputTrue, outputFalse;
+        trueExpr.print(outputTrue);
+        falseExpr.print(outputFalse);
+        CHECK( outputTrue.str() == "_true" );
+        CHECK( outputFalse.str() == "_false" );
+    }
+    SECTION("equals") {
+        CHECK( (new BoolExpr(true))->equals(new BoolExpr(true)) );
+        CHECK_FALSE( (new BoolExpr(true))->equals(new BoolExpr(false)) );
+    }
+    SECTION("interp") {
+        BoolExpr boolExpr(true);
+        Val* val = boolExpr.interp();
+        BoolVal* boolVal = dynamic_cast<BoolVal*>(val);
+        REQUIRE(boolVal != nullptr);
+        ostringstream output;
+        boolVal->print(output);
+        REQUIRE(output.str() == "1"); // Assuming print outputs "1" for true BoolVals
+    }
+}
+
+//From Sarah
+TEST_CASE("Testing EqExpr 2") {
+    Var* varX = new Var("x");
+    Num* num1 = new Num(1);
+    EqExpr eqExpr(varX, num1);
+    SECTION("constructor and print") {
+        ostringstream output;
+        eqExpr.print(output);
+        CHECK(output.str() == "x==1");
+    }
+    SECTION("equals") {
+        EqExpr similarExpr(varX, num1);
+        EqExpr differentExpr(varX, new Num(2));
+        CHECK(eqExpr.equals(&similarExpr));
+        CHECK_FALSE(eqExpr.equals(&differentExpr));
+    }
+    SECTION("interp") {
+        // Assuming VarExpr::interp throws and EqExpr relies on variable resolution.
+        CHECK_THROWS_AS(eqExpr.interp(), std::runtime_error);
+    }
+}
+TEST_CASE("Testing IfExpr 2") {
+    Var *varX = new Var("x");
+    Num *num1 = new Num(1);
+    Num *num2 = new Num(2);
+    EqExpr *condition = new EqExpr(varX, num1);
+    IfExpr ifExpr(condition, num1, num2);
+    SECTION("constructor and print") {
+        ostringstream output;
+        ifExpr.print(output);
+        CHECK(output.str() == "_if x==1_then 1_else 2");
+    }SECTION("pretty_print") {
+        ostringstream output;
+        std::string s = ifExpr.to_pretty_string();
+        std::string expected = "_if x==1\n_then 1\n_else 2\n";
+        CHECK(s == expected);
+    }SECTION("equals") {
+        IfExpr similarExpr(condition, num1, num2);
+        IfExpr differentExpr(new EqExpr(varX, num2), num1, num2);
+        CHECK(ifExpr.equals(&similarExpr));
+        CHECK_FALSE(ifExpr.equals(&differentExpr));
+    }SECTION("interp") {
+        // Assuming VarExpr::interp throws and IfExpr relies on condition evaluation.
+        CHECK_THROWS_AS(ifExpr.interp(), std::runtime_error);
+    }SECTION("pretty_print") {
+        CHECK((new IfExpr(new EqExpr(new Var("x"), new Num(1)), new Num(1), new Num(2)))->to_pretty_string()
+              ==
+              "_if x==1\n"
+              "_then 1\n"
+              "_else 2\n");
+    }
+}
+
+TEST_CASE("Parse if"){
+    CHECK( parse_str("_if 1==1 _then 1 _else 2") ->interp()->equals(new NumVal(1)));
+}
+
+TEST_CASE("Parsing BoolExpr") {
+CHECK(parse_str(("_true"))->equals(new BoolExpr(true)));
+CHECK(parse_str(("_false"))->equals(new BoolExpr(false)));
+}
+
+TEST_CASE("Parsing IfExpr") {
+    CHECK(parse_str(("_if _true _then 4 _else 5"))->equals(
+            new IfExpr(new BoolExpr(true), new Num(4), new Num(5))));
+    CHECK(parse_str(("_if _false _then 4 _else 5"))->equals(
+            new IfExpr(new BoolExpr(false), new Num(4), new Num(5))));
+}
+
+TEST_CASE("Parsing EqExpr") {
+CHECK( parse_str("1 == 2")->interp()->equals(new BoolVal(false)) );
+CHECK( parse_str("2 == 2")->interp()->equals(new BoolVal(true)) );
+CHECK((parse_str("1 + 2 == 3 + 0"))->interp()->equals(new BoolVal(true)));
+CHECK((((parse_str("_if 1 == 2 _then 3 _else 4"))->interp())->to_string()) == "4");
+}
+
+TEST_CASE("If Expr Interp") {
+CHECK( parse_str("_if 1==1 _then 1 _else 2")->interp()->equals(new NumVal(1)));
+CHECK( parse_str("_if 10==12 _then 7 _else 5")->interp()->equals(new NumVal(5)));
+CHECK( parse_str("_if 0==0 _then 14 _else 7")->interp()->equals(new NumVal(14)));
+CHECK( parse_str("_if -4==-5 _then 6 _else 8")->interp()->equals(new NumVal(8)));
+}
+
+
+
 
 
 

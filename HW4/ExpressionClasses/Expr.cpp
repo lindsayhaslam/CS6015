@@ -406,3 +406,167 @@ void Let::pretty_print_at(ostream &os, precedence_t node, bool let_parent, strea
         os << ")";
     }
 }
+
+//BoolExpr
+BoolExpr::BoolExpr(bool b) {
+    this-> val = b;
+}
+
+bool BoolExpr::equals(Expr *e){
+    BoolExpr* boolPointer = dynamic_cast<BoolExpr*>(e);
+    if (boolPointer == nullptr){
+        return false;
+    }
+    return this-> val == boolPointer->val;
+}
+
+Val* BoolExpr::interp() {
+    return new BoolVal(val);
+}
+
+bool BoolExpr::has_variable() {
+    return false;
+}
+
+Expr* BoolExpr::subst(string str, Expr* e){
+    return this;
+}
+
+void BoolExpr::print(ostream &ostream){
+    if(val){
+        ostream << "_true";
+    }
+    else if (!val){
+        ostream << "_false";
+    }
+}
+
+void BoolExpr::pretty_print_at(ostream &ostream, precedence_t prec, bool let_parent, streampos &strmpos){
+    if(val){
+        ostream << "_true";
+    }
+    else if (!val){
+        ostream << "_false";
+    }
+}
+
+//IfExpr
+IfExpr::IfExpr(Expr* if_, Expr* then_, Expr* else_){
+    this->if_ = if_;
+    this->then_ = then_;
+    this->else_ = else_;
+}
+
+bool IfExpr::equals (Expr *e) {
+    IfExpr *ifPtr = dynamic_cast<IfExpr *>(e);
+
+    if (ifPtr == nullptr) {
+        //Not the same type, can't be equal
+        return false;
+    }
+    //Check equality by comparing each part of the IfExpr using their equals method
+    return this->if_->equals(ifPtr->if_) &&
+           this->then_->equals(ifPtr->then_) &&
+           this->else_->equals(ifPtr->else_);
+}
+
+Val* IfExpr::interp(){
+    Val* conditionValue = if_->interp();
+    BoolVal* boolCondition = dynamic_cast<BoolVal*>(conditionValue);
+    if (boolCondition != nullptr && boolCondition->is_true()) {
+        return then_->interp();
+    } else {
+        return else_->interp();
+    }
+}
+
+bool IfExpr::has_variable(){
+    return this->if_->has_variable()||this->then_->has_variable()||else_->has_variable();
+}
+
+//IS THIS CORRECT?
+Expr* IfExpr::subst(string str, Expr* e){
+    return new IfExpr(this->if_->subst(str, e),this->then_->subst(str, e), this->else_->subst(str, e));
+}
+
+void IfExpr::print(ostream &ostream){
+    ostream << "_if ";
+    this->if_->print(ostream);
+    ostream << "_then ";
+    this->then_->print(ostream);
+    ostream << "_else ";
+    this->else_->print(ostream);
+}
+
+void IfExpr::pretty_print_at(ostream &ostream, precedence_t prec, bool let_parent, streampos &strmpos) {
+
+    streampos startPosition = ostream.tellp();
+
+    ostream << "_if ";
+
+    if_->pretty_print_at(ostream, prec_none, false, strmpos);
+
+    ostream << "\n";
+
+    strmpos = ostream.tellp();
+
+    ostream << "_then ";
+
+    then_->pretty_print_at(ostream, prec_none, false, strmpos);
+
+    ostream << "\n";
+
+    ostream << "_else ";
+
+    strmpos = ostream.tellp();
+
+    else_->pretty_print_at(ostream, prec_none, false, strmpos);
+
+    ostream << "\n";
+
+}
+
+//EqExpr
+
+EqExpr::EqExpr(Expr* lhs, Expr* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+bool EqExpr::equals (Expr *e){
+    EqExpr* eqPtr = dynamic_cast<EqExpr*>(e);
+
+    if (eqPtr == nullptr) {
+        return false;
+    }
+    return this->rhs == eqPtr->rhs && this->lhs == eqPtr->lhs;
+}
+
+Val* EqExpr::interp(){
+    return new BoolVal(rhs->interp()->equals(lhs->interp()));
+}
+
+bool EqExpr::has_variable(){
+    return this->rhs->has_variable()||this->lhs->has_variable();
+}
+
+Expr* EqExpr::subst(string str, Expr* e){
+    return new EqExpr(this->rhs->subst(str, e), this->lhs->subst(str, e));
+}
+
+void EqExpr::print(ostream &ostream){
+    this->lhs->print(ostream);
+    ostream << "==";
+    this->rhs->print(ostream);
+}
+
+void EqExpr::pretty_print_at(ostream &ostream, precedence_t prec, bool let_parent, streampos &strmpos){
+    streampos startPosition = ostream.tellp();
+
+    lhs->pretty_print_at(ostream, prec_none, false, strmpos);
+    ostream << "==";
+    rhs->pretty_print_at(ostream, prec_none, false, strmpos);
+}
+
+
+

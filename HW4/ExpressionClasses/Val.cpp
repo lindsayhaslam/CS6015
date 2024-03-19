@@ -47,6 +47,46 @@ void NumVal::print(std::ostream &ostream) {
     ostream <<::to_string(val);
 }
 
+//NumVal is_true throws error
+Val* NumVal::is_true(){
+    throw runtime_error("Error!");
+}
+
+//BoolVal
+BoolVal::BoolVal(bool b) {
+    val = b;
+}
+
+Expr* BoolVal::to_expr() {
+    return new BoolExpr(this->val);
+}
+
+bool BoolVal::equals(Val *v){
+    BoolVal* boolPointer = dynamic_cast<BoolVal*>(v);
+
+    if (boolPointer == nullptr){
+        return false;
+    }
+    return this-> val == boolPointer->val;
+}
+
+Val* BoolVal::add_to(Val* other_val) {
+    throw runtime_error("Cannot add bool");
+    return new NumVal(-1);
+}
+
+Val* BoolVal::mult_with(Val *other_val) {
+    throw runtime_error("Cannot mult bool");
+    return new NumVal(-1);
+}
+
+void BoolVal::print(ostream &ostream){
+    ostream <<::to_string(val);
+}
+
+bool BoolVal::is_true(){
+    return val;
+}
 
 
 

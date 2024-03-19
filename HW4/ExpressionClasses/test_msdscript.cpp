@@ -104,7 +104,7 @@ int main (int argc, const char **argv){
 
     }
 
-        //The input is invalid.
+        //The input is invalid.t
     else{
         cerr << "Usage: test_msdscript <msdscript_path> or test_msdscript <msdscript_path_1> <msdscript_path_2>";
         return 1;
