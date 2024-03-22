@@ -18,6 +18,7 @@ public:
     virtual Val* add_to(Val* other_val) = 0;
     virtual Val* mult_with(Val* other_val) = 0;
     virtual void print(ostream &ostream) = 0;
+    virtual Val* call(Val* actual_arg)=0;
     string to_string();
 };
 
@@ -30,7 +31,8 @@ public:
     virtual Val* add_to(Val* other_val);
     virtual Val* mult_with(Val* other_val);
     virtual void print (ostream &ostream);
-    virtual Val* is_true();
+    void is_true();
+    Val* call(Val* actual_arg);
 };
 
 class BoolVal : public Val {
@@ -43,7 +45,21 @@ public:
     virtual Val* mult_with(Val* other_val);
     virtual void print (ostream &ostream);
     virtual bool is_true();
+    Val* call(Val* actualArg);
 };
 
+class FunVal : public Val {
+public:
+    string formalarg;
+    Expr *body;
+    FunVal(string formal_arg, Expr *body);
+    Expr* to_expr();
+    virtual bool equals (Val *v);
+    virtual Val* add_to(Val* other_val);
+    virtual Val* mult_with(Val *other_val);
+    void print(ostream &ostream);
+    virtual bool is_true();
+    Val* call(Val* actualarg);
+};
 
 #endif //EXPRESSIONCLASSES_VAL_H

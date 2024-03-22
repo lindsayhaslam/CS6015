@@ -48,8 +48,12 @@ void NumVal::print(std::ostream &ostream) {
 }
 
 //NumVal is_true throws error
-Val* NumVal::is_true(){
+void NumVal::is_true(){
     throw runtime_error("Error!");
+}
+
+Val* NumVal::call(Val* actualArg){
+    throw runtime_error("Cannot call NumVal!");
 }
 
 //BoolVal
@@ -87,6 +91,44 @@ void BoolVal::print(ostream &ostream){
 bool BoolVal::is_true(){
     return val;
 }
+
+Val* BoolVal::call(Val* actualArg){
+    throw runtime_error("Cannot call BoolVal");
+}
+
+FunVal::FunVal(string formalarg, Expr *body){
+    this->formalarg = formalarg;
+    this->body = body;
+}
+
+Expr* FunVal::to_expr(){
+    return new FunExpr(this->formalarg, this->body);
+}
+
+bool FunVal::equals (Val *v){
+    FunVal* funPtr = dynamic_cast<FunVal*>(v);
+    if (funPtr == nullptr){
+        return false;
+    }
+    return this->formalarg == funPtr->formalarg && this->body->equals(funPtr->body);
+}
+
+Val* FunVal::add_to(Val *other_val) {
+    throw runtime_error("Cannot add function!");
+}
+Val* FunVal::mult_with(Val *other_val) {
+    throw runtime_error("Cannot multiply function!");
+}
+void FunVal::print(ostream &ostream){
+}
+
+bool FunVal::is_true(){
+    return false;
+}
+Val* FunVal::call(Val* actualArg){
+    return body->subst(formalarg, actualArg->to_expr())->interp();
+}
+
 
 
 

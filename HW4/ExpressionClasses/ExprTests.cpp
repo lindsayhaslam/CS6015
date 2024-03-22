@@ -29,12 +29,12 @@ TEST_CASE("Var Interp Throws") {
     CHECK_THROWS_WITH((new Var("x"))->interp(), "Variable has no value");
 }
 
-TEST_CASE("Var Has Variable") {
-    CHECK((new Var("x"))->has_variable());
-    CHECK((new Var("anything"))->has_variable());
-    //Even if the name is numeric, it's still a variable
-    CHECK((new Var("123"))->has_variable());
-}
+//TEST_CASE("Var Has Variable") {
+//    CHECK((new Var("x"))->has_variable());
+//    CHECK((new Var("anything"))->has_variable());
+//    //Even if the name is numeric, it's still a variable
+//    CHECK((new Var("123"))->has_variable());
+//}
 
 TEST_CASE("Var Subst") {
     //Substitution matches the variable name
@@ -77,13 +77,13 @@ TEST_CASE("Add Interp") {
     CHECK((new Add(new Num(0), new Num(10)))->interp()->equals(new NumVal(10)));
 }
 
-TEST_CASE("Add Has Variable") {
-    CHECK_FALSE((new Add(new Num(5), new Num(4)))->has_variable());
-    CHECK_FALSE((new Add(new Num(0), new Num(-4)))->has_variable());
-    CHECK((new Add(new Var("x"), new Num(4)))->has_variable());
-    CHECK((new Add(new Num(4), new Var("y")))->has_variable());
-    CHECK((new Add(new Var("x"), new Var("y")))->has_variable());
-}
+//TEST_CASE("Add Has Variable") {
+//    CHECK_FALSE((new Add(new Num(5), new Num(4)))->has_variable());
+//    CHECK_FALSE((new Add(new Num(0), new Num(-4)))->has_variable());
+//    CHECK((new Add(new Var("x"), new Num(4)))->has_variable());
+//    CHECK((new Add(new Num(4), new Var("y")))->has_variable());
+//    CHECK((new Add(new Var("x"), new Var("y")))->has_variable());
+//}
 
 TEST_CASE("Add Subst") {
     CHECK((new Add(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp()->equals(new NumVal(8)));
@@ -117,13 +117,13 @@ TEST_CASE("Num Interp") {
     CHECK((new Num(0))->interp()->equals(new NumVal(0)));
 }
 
-TEST_CASE("Num Has Variable") {
-    CHECK_FALSE((new Num(5))->has_variable());
-    CHECK_FALSE((new Num(0))->has_variable());
-    CHECK_FALSE((new Num(-20))->has_variable());
-    CHECK_FALSE((new Num(4))->has_variable());
-    CHECK_FALSE((new Num(1000))->has_variable());
-}
+//TEST_CASE("Num Has Variable") {
+//    CHECK_FALSE((new Num(5))->has_variable());
+//    CHECK_FALSE((new Num(0))->has_variable());
+//    CHECK_FALSE((new Num(-20))->has_variable());
+//    CHECK_FALSE((new Num(4))->has_variable());
+//    CHECK_FALSE((new Num(1000))->has_variable());
+//}
 
 //**********MULT TESTS********//
 TEST_CASE("Expr Mult") {
@@ -150,13 +150,13 @@ TEST_CASE("Mult Interp") {
     CHECK((new Mult(new Num(0), new Num(10)))->interp()->equals(new NumVal(0)));
 }
 
-TEST_CASE("Mult Has Variable") {
-    CHECK_FALSE((new Mult(new Num(5), new Num(4)))->has_variable());
-    CHECK_FALSE((new Mult(new Num(0), new Num(-4)))->has_variable());
-    CHECK((new Mult(new Var("x"), new Num(4)))->has_variable());
-    CHECK((new Mult(new Num(4), new Var("y")))->has_variable());
-    CHECK((new Mult(new Var("x"), new Var("y")))->has_variable());
-}
+//TEST_CASE("Mult Has Variable") {
+//    CHECK_FALSE((new Mult(new Num(5), new Num(4)))->has_variable());
+//    CHECK_FALSE((new Mult(new Num(0), new Num(-4)))->has_variable());
+//    CHECK((new Mult(new Var("x"), new Num(4)))->has_variable());
+//    CHECK((new Mult(new Num(4), new Var("y")))->has_variable());
+//    CHECK((new Mult(new Var("x"), new Var("y")))->has_variable());
+//}
 
 TEST_CASE("Mult Subst") {
     CHECK((new Mult(new Var("x"), new Num(3)))->subst("x", new Num(5))->interp()->equals(new NumVal(15)));
@@ -234,27 +234,27 @@ TEST_CASE("Pretty Print Var Expressions") {
 
 //************LET CLASS**************//
 
-TEST_CASE("Let hasVariable()") {
-    SECTION("rhs contains a variable") {
-        Let expr("x", new Var("y"), new Num(10));
-        CHECK(expr.has_variable() == true);
-    }
-
-    SECTION("body expression contains a variable") {
-        Let expr("x", new Num(5), new Var("y"));
-        CHECK(expr.has_variable() == true);
-    }
-
-    SECTION("Both rhs and body expression contain variables") {
-        Let expr("x", new Var("y"), new Add(new Var("y"), new Num(3)));
-        CHECK(expr.has_variable() == true);
-    }
-
-    SECTION("Neither rhs nor body expression contains variables") {
-        Let expr("x", new Num(5), new Num(10));
-        CHECK(expr.has_variable() == false);
-    }
-}
+//TEST_CASE("Let hasVariable()") {
+//    SECTION("rhs contains a variable") {
+//        Let expr("x", new Var("y"), new Num(10));
+//        CHECK(expr.has_variable() == true);
+//    }
+//
+//    SECTION("body expression contains a variable") {
+//        Let expr("x", new Num(5), new Var("y"));
+//        CHECK(expr.has_variable() == true);
+//    }
+//
+//    SECTION("Both rhs and body expression contain variables") {
+//        Let expr("x", new Var("y"), new Add(new Var("y"), new Num(3)));
+//        CHECK(expr.has_variable() == true);
+//    }
+//
+//    SECTION("Neither rhs nor body expression contains variables") {
+//        Let expr("x", new Num(5), new Num(10));
+//        CHECK(expr.has_variable() == false);
+//    }
+//}
 
 TEST_CASE("Let equals()") {
     SECTION("Equal Let expressions") {
@@ -834,6 +834,36 @@ CHECK( parse_str("_if 0==0 _then 14 _else 7")->interp()->equals(new NumVal(14)))
 CHECK( parse_str("_if -4==-5 _then 6 _else 8")->interp()->equals(new NumVal(8)));
 }
 
+TEST_CASE("FunExpr") {
+
+    SECTION("Parsing FunExpr"){
+        CHECK((parse_str("_let f = _fun (x) x+1"
+                         "_in f(10)"))->interp()->to_string() == "11");
+    }
+
+    SECTION("Parsing FunExpr"){
+        CHECK((parse_str("_let f = _fun (x) x+1"
+                         " _in f(10)"))->interp()->to_string() == "11");
+        CHECK((parse_str("_let f = _fun (x) x*x"
+                         "_in f(2)"))->interp()->to_string() == "4");
+        CHECK((parse_str("_let y = 8"
+                         "_in _let f = _fun (x) x*y"
+                         "_in f(2)"))->interp()->to_string() == "16");
+        CHECK((parse_str("_let x = 8"
+                         "_in _let f = _fun (x) x*x"
+                         "_in f(2)"))->interp()->to_string() == "4");
+        CHECK((parse_str("_let factrl = _fun (factrl)"
+                         "_fun (x)"
+                         "_if x ==1"
+                         "_then 1"
+                         "_else x * factrl(factrl)(x + -1)"
+                         "_in factrl(factrl)(10)"))->interp()->to_string() == "3628800");
+    }
+    SECTION("Parsing CallExpr"){
+        CHECK((parse_str("(_fun (x) x+1 (10))"))->interp()->to_string() == "11");
+        CHECK((parse_str("(_fun (x) x+x (1))"))->interp()->to_string() == "2");
+    }
+}
 
 
 

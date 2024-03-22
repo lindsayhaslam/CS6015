@@ -27,16 +27,16 @@
       <change beforePath="$PROJECT_DIR$/Expr.o" beforeDir="false" afterPath="$PROJECT_DIR$/Expr.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExprTests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ExprTests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExprTests.o" beforeDir="false" afterPath="$PROJECT_DIR$/ExprTests.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LindsayHHW7.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Val.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.h" beforeDir="false" afterPath="$PROJECT_DIR$/Val.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.o" beforeDir="false" afterPath="$PROJECT_DIR$/Val.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/msdscript" beforeDir="false" afterPath="$PROJECT_DIR$/msdscript" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.o" beforeDir="false" afterPath="$PROJECT_DIR$/parse.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_msdscript.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_msdscript.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_msdscript.o" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,11 +103,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Catch.Expr Tests" />
       <item itemvalue="Catch.Expr Var" />
@@ -145,7 +140,10 @@
       <workItem from="1708966881769" duration="3805000" />
       <workItem from="1708974615023" duration="10440000" />
       <workItem from="1710260734966" duration="15861000" />
-      <workItem from="1710463530856" duration="47082000" />
+      <workItem from="1710463530856" duration="47157000" />
+      <workItem from="1710958340142" duration="12128000" />
+      <workItem from="1711055860615" duration="2397000" />
+      <workItem from="1711129340629" duration="10756000" />
     </task>
     <servers />
   </component>
@@ -171,12 +169,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Expr.cpp</url>
-          <line>325</line>
+          <line>332</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/ExprTests.cpp</url>
-          <line>840</line>
+          <line>870</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
