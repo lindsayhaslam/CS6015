@@ -15,4 +15,5 @@ add_executable(ExpressionClasses main.cpp
         test_msdscript.h
         Val.cpp
         Val.h
+        pointer.h
 )

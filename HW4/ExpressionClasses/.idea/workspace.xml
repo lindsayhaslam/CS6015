@@ -21,22 +21,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="505d6d97-55a0-4e7c-8d05-d051dcb5e8e9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pointer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Expr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Expr.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Expr.h" beforeDir="false" afterPath="$PROJECT_DIR$/Expr.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Expr.o" beforeDir="false" afterPath="$PROJECT_DIR$/Expr.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Expr.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ExprTests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ExprTests.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ExprTests.o" beforeDir="false" afterPath="$PROJECT_DIR$/ExprTests.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Val.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.h" beforeDir="false" afterPath="$PROJECT_DIR$/Val.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Val.o" beforeDir="false" afterPath="$PROJECT_DIR$/Val.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-8117a96584f9fd9f345d.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2024-03-12T16-38-18-0621.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-ExpressionClasses-Debug-fcd10a096bc4f59647a8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/msdscript" beforeDir="false" afterPath="$PROJECT_DIR$/msdscript" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/msdscript" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/parse.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parse.o" beforeDir="false" afterPath="$PROJECT_DIR$/parse.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_msdscript.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_msdscript.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/test_msdscript.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,6 +93,11 @@
   }
 }</component>
   <component name="RunManager" selected="CMake Application.ExpressionClasses">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Expr Tests" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ExpressionClasses" TARGET_NAME="ExpressionClasses" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ExpressionClasses" RUN_TARGET_NAME="ExpressionClasses" TEST_METHOD="Expr Tests" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -143,7 +155,9 @@
       <workItem from="1710463530856" duration="47157000" />
       <workItem from="1710958340142" duration="12128000" />
       <workItem from="1711055860615" duration="2397000" />
-      <workItem from="1711129340629" duration="10756000" />
+      <workItem from="1711129340629" duration="11420000" />
+      <workItem from="1711464217284" duration="2492000" />
+      <workItem from="1711728016063" duration="19802000" />
     </task>
     <servers />
   </component>
@@ -159,23 +173,8 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/ExprTests.cpp</url>
-          <line>67</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Val.cpp</url>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Expr.cpp</url>
-          <line>332</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/ExprTests.cpp</url>
-          <line>870</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

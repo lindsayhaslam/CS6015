@@ -36,17 +36,17 @@ int main(int argc, char **argv) {
                 exit(0);
             }
         case do_interp: {
-            Expr *e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->interp() << "\n";
             break;
         }
         case do_print: {
-            Expr *e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->to_string() << "\n";
             break;
         }
         case do_pretty_print: {
-            Expr *e = parse(std::cin);
+            PTR(Expr) e = parse(std::cin);
             std::cout << e->to_pretty_string() << "\n";
             break;
         }

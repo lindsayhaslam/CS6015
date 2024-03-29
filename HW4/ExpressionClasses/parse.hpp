@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Expr.h"
+#include "pointer.h"
 
 //Expr *parse_str(string s);
 //
@@ -47,29 +48,29 @@
 
 //LINDSAY
 
-Expr* parse_num(std::istream &in);
-Expr *parse_multicand(std::istream& in);
-Expr *parse_expr(std::istream &in);
-Expr *parse_expr(const std::string &in);
-Expr *parse_addend(std::istream &in);
-Expr * parse_bool( std::istream & stream );
-Expr * parse_if ( std::istream & stream );
-Expr * parse_eqs ( std::istream & stream );
-Expr * parse_comparg( std::istream & stream );
+PTR(Expr) parse_num(std::istream &in);
+PTR(Expr) parse_multicand(std::istream& in);
+PTR(Expr) parse_expr(std::istream &in);
+PTR(Expr) parse_expr(const std::string &in);
+PTR(Expr) parse_addend(std::istream &in);
+PTR(Expr) parse_bool( std::istream & stream );
+PTR(Expr) parse_if ( std::istream & stream );
+PTR(Expr) parse_eqs ( std::istream & stream );
+PTR(Expr) parse_comparg( std::istream & stream );
 void consume(std::istream &in, int expect);
 void consume( std::istream & stream, const std::string & str);
 static void consumeWord(std::istream &in, std::string word);
 static string parse_term(istream &in);
 void skip_whitespace(std::istream &in);
-Expr *parse(std::istream &in);
-Expr *parse_str(const string& s);
-Expr *parse_var(std::istream &in);
-Expr *parse_let(std::istream &in);
+PTR(Expr) parse(std::istream &in);
+PTR(Expr) parse_str(const string& s);
+PTR(Expr) parse_var(std::istream &in);
+PTR(Expr) parse_let(std::istream &in);
 static void consumeWord(std::istream &in, std::string word);
-Expr *parseInput();
+PTR(Expr) parseInput();
 std::string peek_keyword(std::istream &in);
-Expr* parse_fun(istream &in);
-Expr *parse_inner(std::istream &in);
+PTR(Expr) parse_fun(istream &in);
+PTR(Expr) parse_inner(std::istream &in);
 
 
 

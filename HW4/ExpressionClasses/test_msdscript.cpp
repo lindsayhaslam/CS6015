@@ -5,6 +5,7 @@
 #include <iostream>
 #include "test_msdscript.h"
 #include "exec.h"
+#include "pointer.h"
 
 using namespace std;
 

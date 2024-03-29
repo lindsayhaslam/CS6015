@@ -14,6 +14,7 @@
 #include <string>
 #include <stdexcept>
 #include <sstream>
+#include "pointer.h"
 
 using namespace std;
 class Val;
@@ -24,12 +25,12 @@ typedef enum {
     prec_mult       // = 2
 } precedence_t;
 
-class Expr {
+CLASS(Expr) {
 public:
-    virtual bool equals(Expr *e) = 0;
-    virtual Val* interp() = 0;
+    virtual bool equals(PTR(Expr) e) = 0;
+    virtual PTR(Val) interp() = 0;
 //    virtual bool has_variable()= 0;
-    virtual Expr* subst(string varName, Expr* replacement)  = 0;
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement)  = 0;
     virtual void print (ostream& os) = 0;
     string to_string();
     void pretty_print(ostream &ostream);
@@ -37,17 +38,17 @@ public:
     string to_pretty_string();
 };
 
-class Num : public Expr {
+class Num : public Expr{
 public:
     int val;
-    Num(int val);
-    bool equals(Expr *e);
+    explicit Num(int val);
+    bool equals(PTR(Expr) e);
     //Return the value
-    virtual Val* interp();
+    virtual PTR(Val) interp();
     //Num will never have a variable.
 //    bool has_variable();
-    Expr* subst( string varName, Expr* replacement);
-    virtual void print (ostream& os);
+    PTR(Expr) subst(string varName, PTR(Expr) replacement);
+    virtual void print(ostream& os);
 //    string to_string();
 };
 
@@ -55,38 +56,41 @@ class Var : public Expr{
 public:
     string name;
     Var(string name);
-    virtual bool equals(Expr *e);
-    virtual Val* interp();
+    virtual bool equals(PTR(Expr) e);
+    virtual PTR(Val) interp();
     //Will have a variable.
 //    virtual bool has_variable();
-    virtual Expr* subst(string varName, Expr* replacement);
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
 };
 
-class Add : public Expr {
+class Add :  public Expr{
 public:
-    Expr *lhs, *rhs;
-    Add(Expr *lhs, Expr *rhs);
-    bool equals(Expr *e);
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
+
+    Add(PTR(Expr) lhs, PTR(Expr) rhs);
+    bool equals(PTR(Expr) e);
     //Sum of the subexpression values
-    Val* interp();
+    PTR(Val) interp();
     //Check if either have a variable
 //    bool has_variable();
-    Expr* subst( string varName, Expr* replacement);
+    PTR(Expr) subst( string varName, PTR(Expr) replacement);
     virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
-class Mult : public Expr {
+class Mult : public Expr{
 public:
-    Expr *lhs, *rhs;
-    Mult(Expr *lhs, Expr *rhs);
-    bool equals(Expr *e);
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
+    Mult(PTR(Expr) lhs, PTR(Expr) rhs);
+    bool equals(PTR(Expr) e);
     //The product of the subexpression values
-    Val* interp();
+    PTR(Val) interp();
     //Check if either have a variable
 //    bool has_variable();
-    Expr* subst(string varName, Expr* replacement);
+    PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -94,15 +98,15 @@ public:
 class Let : public Expr {
 public:
     string lhs; //String
-    Expr* rhs; //Bound expression
-    Expr* bodyExpr;
-    Let(string lhs, Expr* rhs, Expr* bodyExpr);
-    virtual bool equals(Expr *e);
+    PTR(Expr) rhs; //Bound expression
+    PTR(Expr) bodyExpr;
+    Let(string lhs, PTR(Expr) rhs, PTR(Expr) bodyExpr);
+    virtual bool equals(PTR(Expr) e);
     //The product of the subexpression values
-    virtual Val* interp();
+    virtual PTR(Val) interp();
     //Check if either have a variable
 //    virtual bool has_variable();
-    virtual Expr* subst(string varName, Expr* replacement);
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -111,38 +115,38 @@ class BoolExpr : public Expr {
 public:
     bool val;
     BoolExpr(bool b);
-    virtual bool equals (Expr *e);
-    virtual Val* interp();
+    virtual bool equals (PTR(Expr) e);
+    virtual PTR(Val) interp();
 //    virtual bool has_variable();
-    virtual Expr* subst(string varName, Expr* replacement);
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
 class IfExpr : public Expr {
 public:
-    Expr* if_;
-    Expr* then_;
-    Expr* else_;
-    IfExpr(Expr* if_, Expr* then_, Expr* else_);
+    PTR(Expr) if_;
+    PTR(Expr) then_;
+    PTR(Expr) else_;
+    IfExpr(PTR(Expr) if_, PTR(Expr) then_, PTR(Expr) else_);
 
-    virtual bool equals (Expr *e);
-    virtual Val* interp();
+    virtual bool equals (PTR(Expr) e);
+    virtual PTR(Val) interp();
 //    virtual bool has_variable();
-    virtual Expr* subst(string varName, Expr* replacement);
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
 
 class EqExpr : public Expr {
 public:
-    Expr* rhs;
-    Expr* lhs;
-    EqExpr(Expr* rhs, Expr* lhs);
-    virtual bool equals (Expr *e);
-    virtual Val* interp();
+    PTR(Expr) rhs;
+    PTR(Expr) lhs;
+    EqExpr(PTR(Expr) rhs, PTR(Expr) lhs);
+    virtual bool equals (PTR(Expr) e);
+    virtual PTR(Val) interp();
 //    virtual bool has_variable();
-    virtual Expr* subst(string varName, Expr* replacement);
+    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -150,11 +154,11 @@ public:
 class FunExpr : public Expr{
 public:
    string formalarg;
-    Expr *body;
-    FunExpr(string formalArg, Expr *body);
-    virtual bool equals(Expr *e);
-    virtual Val* interp();
-    virtual Expr* subst(string str, Expr* e);
+    PTR(Expr) body;
+    FunExpr(string formalArg, PTR(Expr) body);
+    virtual bool equals(PTR(Expr) e);
+    virtual PTR(Val) interp();
+    virtual PTR(Expr) subst(string str, PTR(Expr) e);
     virtual void print(ostream& o);
 };
 
@@ -162,12 +166,12 @@ public:
 
 class CallExpr : public Expr {
 public:
-    Expr *toBeCalled;
-    Expr *actualArg;
-    CallExpr(Expr *toBeCalled, Expr *actualArg);
-    bool equals(Expr* other);
-    Val* interp();
-    Expr* subst(const std::string var, Expr* replacement);
+    PTR(Expr) toBeCalled;
+    PTR(Expr) actualArg;
+    CallExpr(PTR(Expr) toBeCalled, PTR(Expr) actualArg);
+    bool equals(PTR(Expr) other);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string var, PTR(Expr) replacement);
     void print(std::ostream& o);
 };
 #endif //EXPRESSIONCLASSES_EXPR_H
