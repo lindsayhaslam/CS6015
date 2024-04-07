@@ -85,6 +85,12 @@ build CMakeFiles/ExpressionClasses.dir/Val.cpp.o: CXX_COMPILER__ExpressionClasse
   OBJECT_DIR = CMakeFiles/ExpressionClasses.dir
   OBJECT_FILE_DIR = CMakeFiles/ExpressionClasses.dir
 
+build CMakeFiles/ExpressionClasses.dir/Env.cpp.o: CXX_COMPILER__ExpressionClasses_unscanned_Debug /Users/lindsayhaslam/CS6015/HW4/ExpressionClasses/Env.cpp || cmake_object_order_depends_target_ExpressionClasses
+  DEP_FILE = CMakeFiles/ExpressionClasses.dir/Env.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ExpressionClasses.dir
+  OBJECT_FILE_DIR = CMakeFiles/ExpressionClasses.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ExpressionClasses
@@ -93,7 +99,7 @@ build CMakeFiles/ExpressionClasses.dir/Val.cpp.o: CXX_COMPILER__ExpressionClasse
 #############################################
 # Link the executable ExpressionClasses
 
-build ExpressionClasses: CXX_EXECUTABLE_LINKER__ExpressionClasses_Debug CMakeFiles/ExpressionClasses.dir/main.cpp.o CMakeFiles/ExpressionClasses.dir/Expr.cpp.o CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o CMakeFiles/ExpressionClasses.dir/parse.cpp.o CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o CMakeFiles/ExpressionClasses.dir/Val.cpp.o
+build ExpressionClasses: CXX_EXECUTABLE_LINKER__ExpressionClasses_Debug CMakeFiles/ExpressionClasses.dir/main.cpp.o CMakeFiles/ExpressionClasses.dir/Expr.cpp.o CMakeFiles/ExpressionClasses.dir/ExprTests.cpp.o CMakeFiles/ExpressionClasses.dir/parse.cpp.o CMakeFiles/ExpressionClasses.dir/test_msdscript.cpp.o CMakeFiles/ExpressionClasses.dir/Val.cpp.o CMakeFiles/ExpressionClasses.dir/Env.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk
   OBJECT_DIR = CMakeFiles/ExpressionClasses.dir
   POST_BUILD = :

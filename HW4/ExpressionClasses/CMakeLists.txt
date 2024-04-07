@@ -16,4 +16,6 @@ add_executable(ExpressionClasses main.cpp
         Val.cpp
         Val.h
         pointer.h
+        Env.h
+        Env.cpp
 )
