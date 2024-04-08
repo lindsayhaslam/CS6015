@@ -12,6 +12,9 @@
 #include "Expr.h"
 #include "parse.hpp"
 #include "catch.h"
+#include "pointer.h"
+#include "Env.h"
+#include "Val.h"
 
 using namespace std;
 
@@ -37,7 +40,7 @@ int main(int argc, char **argv) {
             }
         case do_interp: {
             PTR(Expr) e = parse(std::cin);
-            std::cout << e->interp() << "\n";
+            cout << e->interp(Env::empty)->to_string() << "\n";
             break;
         }
         case do_print: {

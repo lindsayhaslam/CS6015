@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include "pointer.h"
+#include "Env.h"
 
 using namespace std;
 class Expr;
@@ -53,7 +54,9 @@ class FunVal : public Val {
 public:
     string formalarg;
     PTR(Expr) body;
-    FunVal(string formal_arg, PTR(Expr) body);
+    PTR(Env) env;
+
+    FunVal(string formal_arg, PTR(Expr) body, PTR(Env) env = nullptr);
     PTR(Expr) to_expr();
     virtual bool equals (PTR(Val) v);
     virtual PTR(Val) add_to(PTR(Val) other_val);

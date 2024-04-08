@@ -22,12 +22,12 @@ TEST_CASE("Expr Var") {
     //Test comparing Var with a Num
     CHECK((NEW(Var)("z"))->equals(NEW(Num)(1)) == false);
     //Testing interp
-    CHECK_THROWS_WITH((NEW(Var)("x"))->interp(), "Variable has no value");
+    CHECK_THROWS_WITH((NEW(Var)("x"))->interp(Env::empty), "Variable has no value");
 }
 
 TEST_CASE("Var Interp Throws") {
-    CHECK_THROWS_AS((NEW(Var)("x"))->interp(), std::runtime_error);
-    CHECK_THROWS_WITH((NEW(Var)("x"))->interp(), "Variable has no value");
+    CHECK_THROWS_AS((NEW(Var)("x"))->interp(Env::empty), std::runtime_error);
+    CHECK_THROWS_WITH((NEW(Var)("x"))->interp(Env::empty), "Variable has no value");
 }
 
 //TEST_CASE("Var Has Variable") {
@@ -37,20 +37,21 @@ TEST_CASE("Var Interp Throws") {
 //    CHECK((NEW(Var)("123"))->has_variable());
 //}
 
-TEST_CASE("Var Subst") {
-    //Substitution matches the variable name
-    CHECK((NEW(Var)("x"))->subst("x", NEW(Num)(5))->equals(NEW(Num)(5)));
-    //Substitution does not match the variable name, no substitution occurs
-    auto noSubstExpr = (NEW(Var)("x"))->subst("y", NEW(Num)(5));
-    CHECK(noSubstExpr->equals(NEW(Var)("x")));
-    //Substitution with another variable
-    CHECK((NEW(Var)("x"))->subst("x", NEW(Var)("y"))->equals(NEW(Var)("y")));
-    // Substitution with a complex expression
-    CHECK((NEW(Var)("x"))->subst("x", NEW(Add)(NEW(Num)(1), NEW(Num)(2)))->equals(NEW(Add)(NEW(Num)(1), NEW(Num)(2))));
-    // No substitution when variable names do not match
-    auto noMatchSubst = (NEW(Var)("x"))->subst("z", NEW(Num)(10));
-    CHECK(noMatchSubst->equals(NEW(Var)("x")));
-}
+/**Subst Test: Removed**/
+//TEST_CASE("Var Subst") {
+//    //Substitution matches the variable name
+//    CHECK((NEW(Var)("x"))->subst("x", NEW(Num)(5))->equals(NEW(Num)(5)));
+//    //Substitution does not match the variable name, no substitution occurs
+//    auto noSubstExpr = (NEW(Var)("x"))->subst("y", NEW(Num)(5));
+//    CHECK(noSubstExpr->equals(NEW(Var)("x")));
+//    //Substitution with another variable
+//    CHECK((NEW(Var)("x"))->subst("x", NEW(Var)("y"))->equals(NEW(Var)("y")));
+//    // Substitution with a complex expression
+//    CHECK((NEW(Var)("x"))->subst("x", NEW(Add)(NEW(Num)(1), NEW(Num)(2)))->equals(NEW(Add)(NEW(Num)(1), NEW(Num)(2))));
+//    // No substitution when variable names do not match
+//    auto noMatchSubst = (NEW(Var)("x"))->subst("z", NEW(Num)(10));
+//    CHECK(noMatchSubst->equals(NEW(Var)("x")));
+//}
 
 
 //**********ADD TESTS********//
@@ -66,15 +67,15 @@ TEST_CASE("Expr Add") {
     //Test with one operand being negative
     CHECK((NEW(Add)(NEW(Num)(2), NEW(Num)(-3)))->equals(NEW(Add)(NEW(Num)(2), NEW(Num)(-3))) == true);
     //Test from HW3
-    CHECK((NEW(Add)(NEW(Add)(NEW(Num)(100), NEW(Num)(100)), NEW(Add)(NEW(Num)(200),NEW(Num)(200))))->interp()->equals(NEW(NumVal)(600)));
+    CHECK((NEW(Add)(NEW(Add)(NEW(Num)(100), NEW(Num)(100)), NEW(Add)(NEW(Num)(200),NEW(Num)(200))))->interp(Env::empty)->equals(NEW(NumVal)(600)));
 }
 
 TEST_CASE("Add Interp") {
-    CHECK((NEW(Add)(NEW(Num)(3), NEW(Num)(2)))->interp()->equals(NEW(NumVal)(5)));
-    CHECK((NEW(Add)(NEW(Num)(5), NEW(Num)(-4)))->interp()->equals(NEW(NumVal)(1)));
-    CHECK((NEW(Add)(NEW(Num)(-3), NEW(Num)(3)))->interp()->equals(NEW(NumVal)(0)));
-    CHECK((NEW(Add)(NEW(Num)(-3), NEW(Num)(-3)))->interp()->equals(NEW(NumVal)(-6)));
-    CHECK((NEW(Add)(NEW(Num)(0), NEW(Num)(10)))->interp()->equals(NEW(NumVal)(10)));
+    CHECK((NEW(Add)(NEW(Num)(3), NEW(Num)(2)))->interp(Env::empty)->equals(NEW(NumVal)(5)));
+    CHECK((NEW(Add)(NEW(Num)(5), NEW(Num)(-4)))->interp(Env::empty)->equals(NEW(NumVal)(1)));
+    CHECK((NEW(Add)(NEW(Num)(-3), NEW(Num)(3)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
+    CHECK((NEW(Add)(NEW(Num)(-3), NEW(Num)(-3)))->interp(Env::empty)->equals(NEW(NumVal)(-6)));
+    CHECK((NEW(Add)(NEW(Num)(0), NEW(Num)(10)))->interp(Env::empty)->equals(NEW(NumVal)(10)));
 }
 
 //TEST_CASE("Add Has Variable") {
@@ -85,13 +86,14 @@ TEST_CASE("Add Interp") {
 //    CHECK((NEW(Add)(NEW(Var)("x"), NEW(Var)("y")))->has_variable());
 //}
 
-TEST_CASE("Add Subst") {
-    CHECK((NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))->subst("x", NEW(Num)(5))->interp()->equals(NEW(NumVal)(8)));
-    CHECK((NEW(Add)(NEW(Num)(3), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(5)));
-    CHECK((NEW(Add)(NEW(Num)(-1), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)( 1)));
-    CHECK((NEW(Add)(NEW(Var)("x"), NEW(Var)("x")))->subst("x", NEW(Num)(3))->interp()->equals(NEW(NumVal)(6)));
-    CHECK((NEW(Add)(NEW(Var)("y"), NEW(Var)("z")))->subst("y", NEW(Num)(3))->subst("z", NEW(Num)(2))->interp()->equals(NEW(NumVal)(5)));
-}
+/**Subst Test: Removed**/
+//TEST_CASE("Add Subst") {
+//    CHECK((NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))->subst("x", NEW(Num)(5))->interp()->equals(NEW(NumVal)(8)));
+//    CHECK((NEW(Add)(NEW(Num)(3), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(5)));
+//    CHECK((NEW(Add)(NEW(Num)(-1), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)( 1)));
+//    CHECK((NEW(Add)(NEW(Var)("x"), NEW(Var)("x")))->subst("x", NEW(Num)(3))->interp()->equals(NEW(NumVal)(6)));
+//    CHECK((NEW(Add)(NEW(Var)("y"), NEW(Var)("z")))->subst("y", NEW(Num)(3))->subst("z", NEW(Num)(2))->interp()->equals(NEW(NumVal)(5)));
+//}
 
 
 //**********NUM TESTS********//
@@ -110,11 +112,11 @@ TEST_CASE("Expr Num") {
 }
 
 TEST_CASE("Num Interp") {
-    CHECK((NEW(Num)(3))->interp()->equals(NEW(NumVal)(3)));
-    CHECK((NEW(Num)(5))->interp()->equals(NEW(NumVal)(5)));
-    CHECK((NEW(Num)(-18))->interp()->equals(NEW(NumVal)(-18)));
-    CHECK((NEW(Num)(-3))->interp()->equals(NEW(NumVal)(-3)));
-    CHECK((NEW(Num)(0))->interp()->equals(NEW(NumVal)(0)));
+    CHECK((NEW(Num)(3))->interp(Env::empty)->equals(NEW(NumVal)(3)));
+    CHECK((NEW(Num)(5))->interp(Env::empty)->equals(NEW(NumVal)(5)));
+    CHECK((NEW(Num)(-18))->interp(Env::empty)->equals(NEW(NumVal)(-18)));
+    CHECK((NEW(Num)(-3))->interp(Env::empty)->equals(NEW(NumVal)(-3)));
+    CHECK((NEW(Num)(0))->interp(Env::empty)->equals(NEW(NumVal)(0)));
 }
 
 //TEST_CASE("Num Has Variable") {
@@ -143,11 +145,11 @@ TEST_CASE("Expr Mult") {
 }
 
 TEST_CASE("Mult Interp") {
-    CHECK((NEW(Mult)(NEW(Num)(3), NEW(Num)(2)))->interp()->equals(NEW(NumVal)(6)));
-    CHECK((NEW(Mult)(NEW(Num)(5), NEW(Num)(4)))->interp()->equals(NEW(NumVal)(20)));
-    CHECK((NEW(Mult)(NEW(Num)(-3), NEW(Num)(6)))->interp()->equals(NEW(NumVal)(-18)));
-    CHECK((NEW(Mult)(NEW(Num)(-3), NEW(Num)(-3)))->interp()->equals(NEW(NumVal)(9)));
-    CHECK((NEW(Mult)(NEW(Num)(0), NEW(Num)(10)))->interp()->equals(NEW(NumVal)(0)));
+    CHECK((NEW(Mult)(NEW(Num)(3), NEW(Num)(2)))->interp(Env::empty)->equals(NEW(NumVal)(6)));
+    CHECK((NEW(Mult)(NEW(Num)(5), NEW(Num)(4)))->interp(Env::empty)->equals(NEW(NumVal)(20)));
+    CHECK((NEW(Mult)(NEW(Num)(-3), NEW(Num)(6)))->interp(Env::empty)->equals(NEW(NumVal)(-18)));
+    CHECK((NEW(Mult)(NEW(Num)(-3), NEW(Num)(-3)))->interp(Env::empty)->equals(NEW(NumVal)(9)));
+    CHECK((NEW(Mult)(NEW(Num)(0), NEW(Num)(10)))->interp(Env::empty)->equals(NEW(NumVal)(0)));
 }
 
 //TEST_CASE("Mult Has Variable") {
@@ -158,13 +160,14 @@ TEST_CASE("Mult Interp") {
 //    CHECK((NEW(Mult)(NEW(Var)("x"), NEW(Var)("y")))->has_variable());
 //}
 
-TEST_CASE("Mult Subst") {
-    CHECK((NEW(Mult)(NEW(Var)("x"), NEW(Num)(3)))->subst("x", NEW(Num)(5))->interp()->equals(NEW(NumVal)(15)));
-    CHECK((NEW(Mult)(NEW(Num)(3), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(6)));
-    CHECK((NEW(Mult)(NEW(Num)(-1), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(-2)));
-    CHECK((NEW(Mult)(NEW(Var)("x"), NEW(Var)("x")))->subst("x", NEW(Num)(3))->interp()->equals(NEW(NumVal)(9)));
-    CHECK((NEW(Mult)(NEW(Var)("y"), NEW(Var)("z")))->subst("y", NEW(Num)(3))->subst("z", NEW(Num)(2))->interp()->equals(NEW(NumVal)(6)));
-}
+/**Subst Test: Removed**/
+//TEST_CASE("Mult Subst") {
+//    CHECK((NEW(Mult)(NEW(Var)("x"), NEW(Num)(3)))->subst("x", NEW(Num)(5))->interp()->equals(NEW(NumVal)(15)));
+//    CHECK((NEW(Mult)(NEW(Num)(3), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(6)));
+//    CHECK((NEW(Mult)(NEW(Num)(-1), NEW(Var)("x")))->subst("x", NEW(Num)(2))->interp()->equals(NEW(NumVal)(-2)));
+//    CHECK((NEW(Mult)(NEW(Var)("x"), NEW(Var)("x")))->subst("x", NEW(Num)(3))->interp()->equals(NEW(NumVal)(9)));
+//    CHECK((NEW(Mult)(NEW(Var)("y"), NEW(Var)("z")))->subst("y", NEW(Num)(3))->subst("z", NEW(Num)(2))->interp()->equals(NEW(NumVal)(6)));
+//}
 
 
 /****PRETTY PRINT TESTS*****/
@@ -209,11 +212,11 @@ TEST_CASE("Pretty Print Add Expressions") {
 
 TEST_CASE("Pretty Print Var Expressions") {
     //Substitution and Pretty Print
-    PTR(Expr) expr = (NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))->subst("x", NEW(Mult)(NEW(Num)(2), NEW(Num)(3)));
-    CHECK(expr->to_pretty_string() == "2 * 3 + 5");
-    //Substitution with variable and Pretty Print
-    PTR(Expr) exprWithVar = (NEW(Add)(NEW(Var)("x"), NEW(Var)("y")))->subst("x", NEW(Mult)(NEW(Var)("z"), NEW(Num)(3)));
-    CHECK(exprWithVar->to_pretty_string() == "z * 3 + y");
+//    PTR(Expr) expr = (NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))->subst("x", NEW(Mult)(NEW(Num)(2), NEW(Num)(3)));
+//    CHECK(expr->to_pretty_string() == "2 * 3 + 5");
+//    //Substitution with variable and Pretty Print
+//    PTR(Expr) exprWithVar = (NEW(Add)(NEW(Var)("x"), NEW(Var)("y")))->subst("x", NEW(Mult)(NEW(Var)("z"), NEW(Num)(3)));
+//    CHECK(exprWithVar->to_pretty_string() == "z * 3 + y");
     //Simple variable expression
     CHECK((NEW(Var)("a"))->to_pretty_string() == "a");
     //Variable addition
@@ -225,11 +228,11 @@ TEST_CASE("Pretty Print Var Expressions") {
     CHECK((NEW(Mult)(NEW(Add)(NEW(Num)(3), NEW(Mult)(NEW(Var)("y"), NEW(Num)(4))), NEW(Var)("x")))->to_pretty_string() == "(3 + y * 4) * x");
     CHECK((NEW(Add)(NEW(Mult)(NEW(Add)(NEW(Var)("a"), NEW(Num)(2)), NEW(Var)("b")), NEW(Num)(5)))->to_pretty_string() == "(a + 2) * b + 5");
     //Substitution
-    PTR(Expr) substExpr = (NEW(Mult)(NEW(Add)(NEW(Var)("x"), NEW(Num)(1)), NEW(Add)(NEW(Num)(2), NEW(Var)("y"))))->subst("x", NEW(Num)(3));
-    CHECK(substExpr->to_pretty_string() == "(3 + 1) * (2 + y)");
+//    PTR(Expr) substExpr = (NEW(Mult)(NEW(Add)(NEW(Var)("x"), NEW(Num)(1)), NEW(Add)(NEW(Num)(2), NEW(Var)("y"))))->subst("x", NEW(Num)(3));
+//    CHECK(substExpr->to_pretty_string() == "(3 + 1) * (2 + y)");
     //Substitution for a super nested expression
     PTR(Expr) deepNestedExpr = (NEW(Add)(NEW(Mult)(NEW(Add)(NEW(Var)("x"), NEW(Num)(4)), NEW(Var)("z")), NEW(Mult)(NEW(Var)("y"), NEW(Num)(3))));
-    CHECK(deepNestedExpr->subst("y", NEW(Add)(NEW(Num)(1), NEW(Var)("x")))->to_pretty_string() == "(x + 4) * z + (1 + x) * 3");
+//    CHECK(deepNestedExpr->subst("y", NEW(Add)(NEW(Num)(1), NEW(Var)("x")))->to_pretty_string() == "(x + 4) * z + (1 + x) * 3");
 }
 
 //************LET CLASS**************//
@@ -287,46 +290,46 @@ TEST_CASE("Let equals()") {
         CHECK_FALSE(expr1->equals(expr2));
     }
 }
-
-TEST_CASE("Let Subst") {
-    //Tests that substituting 'x' with a new number in a Let expression where 'x' is both the bound variable and in the body doesn't affect the body due to shadowing rules.
-    CHECK((NEW(Let)("x", NEW(Num)(5), NEW(Var)("x")))->subst("x", NEW(Num)(10))->interp()->equals(NEW(NumVal)(5))); //No substitution in bodyExpr due to shadowing
-    //Tests that substituting 'y' (not the bound variable) in the rhs of a Let expression affects the final interpretation correctly.
-    CHECK((NEW(Let)("x", NEW(Var)("y"), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("y", NEW(Num)(5))->interp()->equals(NEW(NumVal)(8))); // Substitution in rhs
-    //Tests that substituting 'y' (not the bound variable) in both the rhs and the body of a Let expression affects the final interpretation correctly.
-    CHECK((NEW(Let)("x", NEW(Add)(NEW(Var)("y"), NEW(Num)(2)), NEW(Add)(NEW(Var)("x"), NEW(Var)("y"))))->subst("y", NEW(Num)(10))->interp()->equals(NEW(NumVal)(22))); //Substitution in rhs and bodyExpr
-    //Tests that substituting 'x' with a new number does not affect the Let expression when 'x' is the bound variable, demonstrating shadowing.
-    CHECK( (NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5))))->subst("x", NEW(Num)(4))
-                   ->equals( NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))));
-    //Tests that substituting 'y' (not present in the Let expression) does not change the Let expression.
-    CHECK( (NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5))))->subst("y", NEW(Num)(4))
-                   ->equals( NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))));
-    //Tests substitution of 'x' in the rhs of a Let expression when 'x' is also the bound variable, showing that rhs can still be substituted.
-    CHECK( (NEW(Let)("x", NEW(Add)(NEW(Var)("x"), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("x", NEW(Num)(4))
-                   ->equals(NEW(Let)("x", NEW(Add)(NEW(Num)(4), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))) );
-    //Tests substitution of 'y' in the rhs of a Let expression when 'y' is different from the bound variable 'x'.
-    CHECK( (NEW(Let)("x", NEW(Add)(NEW(Var)("y"), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("y", NEW(Num)(4))
-                   ->equals(NEW(Let)("x", NEW(Add)(NEW(Num)(4), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))) );
-    //Tests substitution of 'y' in the body of a Let expression when 'y' is different from the bound variable 'x', and 'y' is part of a nested addition.
-    CHECK( (NEW(Let)("x", NEW(Num)(6), NEW(Add)(NEW(Var)("x"), NEW(Add)(NEW(Var)("y"), NEW(Num)(7)))))->subst("y", NEW(Num)(4))
-                   ->equals(NEW(Let)("x", NEW(Num)(6), NEW(Add)(NEW(Var)("x"), NEW(Add)(NEW(Num)(4), NEW(Num)(7))))) );
-
-}
+/**Subst Test: Removed**/
+//TEST_CASE("Let Subst") {
+//    //Tests that substituting 'x' with a new number in a Let expression where 'x' is both the bound variable and in the body doesn't affect the body due to shadowing rules.
+//    CHECK((NEW(Let)("x", NEW(Num)(5), NEW(Var)("x")))->subst("x", NEW(Num)(10))->interp()->equals(NEW(NumVal)(5))); //No substitution in bodyExpr due to shadowing
+//    //Tests that substituting 'y' (not the bound variable) in the rhs of a Let expression affects the final interpretation correctly.
+//    CHECK((NEW(Let)("x", NEW(Var)("y"), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("y", NEW(Num)(5))->interp()->equals(NEW(NumVal)(8))); // Substitution in rhs
+//    //Tests that substituting 'y' (not the bound variable) in both the rhs and the body of a Let expression affects the final interpretation correctly.
+//    CHECK((NEW(Let)("x", NEW(Add)(NEW(Var)("y"), NEW(Num)(2)), NEW(Add)(NEW(Var)("x"), NEW(Var)("y"))))->subst("y", NEW(Num)(10))->interp()->equals(NEW(NumVal)(22))); //Substitution in rhs and bodyExpr
+//    //Tests that substituting 'x' with a new number does not affect the Let expression when 'x' is the bound variable, demonstrating shadowing.
+//    CHECK( (NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5))))->subst("x", NEW(Num)(4))
+//                   ->equals( NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))));
+//    //Tests that substituting 'y' (not present in the Let expression) does not change the Let expression.
+//    CHECK( (NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5))))->subst("y", NEW(Num)(4))
+//                   ->equals( NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(5)))));
+//    //Tests substitution of 'x' in the rhs of a Let expression when 'x' is also the bound variable, showing that rhs can still be substituted.
+//    CHECK( (NEW(Let)("x", NEW(Add)(NEW(Var)("x"), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("x", NEW(Num)(4))
+//                   ->equals(NEW(Let)("x", NEW(Add)(NEW(Num)(4), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))) );
+//    //Tests substitution of 'y' in the rhs of a Let expression when 'y' is different from the bound variable 'x'.
+//    CHECK( (NEW(Let)("x", NEW(Add)(NEW(Var)("y"), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3))))->subst("y", NEW(Num)(4))
+//                   ->equals(NEW(Let)("x", NEW(Add)(NEW(Num)(4), NEW(Num)(8)), NEW(Add)(NEW(Var)("x"), NEW(Num)(3)))) );
+//    //Tests substitution of 'y' in the body of a Let expression when 'y' is different from the bound variable 'x', and 'y' is part of a nested addition.
+//    CHECK( (NEW(Let)("x", NEW(Num)(6), NEW(Add)(NEW(Var)("x"), NEW(Add)(NEW(Var)("y"), NEW(Num)(7)))))->subst("y", NEW(Num)(4))
+//                   ->equals(NEW(Let)("x", NEW(Num)(6), NEW(Add)(NEW(Var)("x"), NEW(Add)(NEW(Num)(4), NEW(Num)(7))))) );
+//
+//}
 
 TEST_CASE("Interp") {
     //Add
-    CHECK((NEW(Mult)(NEW(Num)(5), NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(1)))))->interp()->equals(NEW(NumVal)(30)));
+    CHECK((NEW(Mult)(NEW(Num)(5), NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(1)))))->interp(Env::empty)->equals(NEW(NumVal)(30)));
     //Mult
-    CHECK((NEW(Add)(NEW(Mult)(NEW(Num)(5), NEW(Let)("x", NEW(Num)(5), NEW(Var)("x"))), NEW(Num)(1)))->interp()->equals(NEW(NumVal)(26)));
+    CHECK((NEW(Add)(NEW(Mult)(NEW(Num)(5), NEW(Let)("x", NEW(Num)(5), NEW(Var)("x"))), NEW(Num)(1)))->interp(Env::empty)->equals(NEW(NumVal)(26)));
     //Nested in right argument of multiplication expression
     CHECK ((NEW(Mult)(NEW(Mult)(NEW(Num)(2), NEW(Let)("x", NEW(Num)(5), NEW(Add)(NEW(Var)("x"), NEW(Num)(1)))),
-                     NEW(Num)(3)))->interp()->equals(NEW(NumVal)(36)));
+                     NEW(Num)(3)))->interp(Env::empty)->equals(NEW(NumVal)(36)));
     //Variable is unchanged.
     CHECK_THROWS_WITH (
             (NEW(Add)(NEW(Let)("x", NEW(Num)(3), NEW(Let)("y", NEW(Num)(3), NEW(Add)(NEW(Var)("y"), NEW(Num)(2)))),
-                     NEW(Var)("x")))->interp(), "Variable has no value");
+                     NEW(Var)("x")))->interp(Env::empty), "Variable has no value");
     //Lhs Add
-    CHECK ((NEW(Add)(NEW(Let)("x", NEW(Num)(2), NEW(Add)(NEW(Var)("x"), NEW(Num)(9))), NEW(Num)(4)))->interp()->equals(NEW(NumVal)(15)));
+    CHECK ((NEW(Add)(NEW(Let)("x", NEW(Num)(2), NEW(Add)(NEW(Var)("x"), NEW(Num)(9))), NEW(Num)(4)))->interp(Env::empty)->equals(NEW(NumVal)(15)));
 }
 
 TEST_CASE("Let Print()") {
@@ -444,10 +447,10 @@ TEST_CASE("parse") {
 
     //Let Tests
     CHECK(parse_str("_let x=5 _in x")->equals(NEW(Let)("x", NEW(Num)(5), NEW(Var)("x"))));
-    CHECK(parse_str("_let x=5 _in (x+10)")->interp()->equals(NEW(NumVal)(15)));
-    CHECK(parse_str("_let x=5 _in (_let y=x+2 _in y+3)")->interp()->equals(NEW(NumVal)(10)));
-    CHECK(parse_str("_let x=3 _in x*3")->interp()->equals(NEW(NumVal)(9)));
-    CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp()->equals(NEW(NumVal)(5)));
+    CHECK(parse_str("_let x=5 _in (x+10)")->interp(Env::empty)->equals(NEW(NumVal)(15)));
+    CHECK(parse_str("_let x=5 _in (_let y=x+2 _in y+3)")->interp(Env::empty)->equals(NEW(NumVal)(10)));
+    CHECK(parse_str("_let x=3 _in x*3")->interp(Env::empty)->equals(NEW(NumVal)(9)));
+    CHECK(parse_str("_let x=5 _in (_let x=3 _in x+2)")->interp(Env::empty)->equals(NEW(NumVal)(5)));
 }
 
 TEST_CASE("Testing NumVal") {
@@ -574,7 +577,7 @@ TEST_CASE("Testing BoolExpr") {
 
     SECTION("interp") {
         BoolExpr boolExpr(true);
-        PTR(Val) val = boolExpr.interp();
+        PTR(Val) val = boolExpr.interp(Env::empty);
         PTR(BoolVal) boolVal = CAST(BoolVal)(val);
 
         REQUIRE(boolVal != nullptr); // Ensure it's a BoolVal
@@ -597,33 +600,34 @@ TEST_CASE("Testing IfExpr") {
                "_then 1\n"
                "_else 2\n" );
     }
-    SECTION("IfExpr Subst"){
-        PTR(Var) varX = NEW(Var)("x");
-        PTR(Num) num1 = NEW(Num)(1);
-        PTR(Num) num2 = NEW(Num)(2);
-        PTR(Var) varY = NEW(Var)("y");
-
-        //Test substitution in the `if_` part
-        PTR(IfExpr) ifExpr1 = NEW(IfExpr)(varX, num1, num2);
-        PTR(Expr) substitutedIfExpr1 = ifExpr1->subst("x", varY);
-        ostringstream output1;
-        substitutedIfExpr1->print(output1);
-        CHECK(output1.str() == "_if y_then 1_else 2");
-
-        //Test substitution in the `then_` part
-        PTR(IfExpr) ifExpr2 = NEW(IfExpr)(num1, varX, num2);
-        PTR(Expr) substitutedIfExpr2 = ifExpr2->subst("x", varY);
-        ostringstream output2;
-        substitutedIfExpr2->print(output2);
-        CHECK(output2.str() == "_if 1_then y_else 2");
-
-        //Test substitution in the `else_` part
-        PTR(IfExpr) ifExpr3 = NEW(IfExpr)(num1, num2, varX);
-        PTR(Expr) substitutedIfExpr3 = ifExpr3->subst("x", varY);
-        ostringstream output3;
-        substitutedIfExpr3->print(output3);
-        CHECK(output3.str() == "_if 1_then 2_else y");
-    }
+/**Subst Test: Removed**/
+//    SECTION("IfExpr Subst"){
+//        PTR(Var) varX = NEW(Var)("x");
+//        PTR(Num) num1 = NEW(Num)(1);
+//        PTR(Num) num2 = NEW(Num)(2);
+//        PTR(Var) varY = NEW(Var)("y");
+//
+//        //Test substitution in the `if_` part
+//        PTR(IfExpr) ifExpr1 = NEW(IfExpr)(varX, num1, num2);
+//        PTR(Expr) substitutedIfExpr1 = ifExpr1->subst("x", varY);
+//        ostringstream output1;
+//        substitutedIfExpr1->print(output1);
+//        CHECK(output1.str() == "_if y_then 1_else 2");
+//
+//        //Test substitution in the `then_` part
+//        PTR(IfExpr) ifExpr2 = NEW(IfExpr)(num1, varX, num2);
+//        PTR(Expr) substitutedIfExpr2 = ifExpr2->subst("x", varY);
+//        ostringstream output2;
+//        substitutedIfExpr2->print(output2);
+//        CHECK(output2.str() == "_if 1_then y_else 2");
+//
+//        //Test substitution in the `else_` part
+//        PTR(IfExpr) ifExpr3 = NEW(IfExpr)(num1, num2, varX);
+//        PTR(Expr) substitutedIfExpr3 = ifExpr3->subst("x", varY);
+//        ostringstream output3;
+//        substitutedIfExpr3->print(output3);
+//        CHECK(output3.str() == "_if 1_then 2_else y");
+//    }
 }
 
 TEST_CASE("IfExpr printing") {
@@ -653,11 +657,11 @@ TEST_CASE("IfExpr interpretation") {
     auto falseCondition = NEW(IfExpr)(NEW(BoolExpr)(false), NEW(Num)(1), NEW(Num)(2));
 
     SECTION("interprets `then_` branch for true condition") {
-        CHECK(CAST(NumVal)(trueCondition->interp())->val == 1);
+        CHECK(CAST(NumVal)(trueCondition->interp(Env::empty))->val == 1);
     }
 
     SECTION("interprets `else_` branch for false condition") {
-        CHECK(CAST(NumVal)(falseCondition->interp())->val == 2);
+        CHECK(CAST(NumVal)(falseCondition->interp(Env::empty))->val == 2);
     }
 }
 
@@ -737,7 +741,7 @@ TEST_CASE("Testing BoolExpr") {
     }
     SECTION("interp") {
         BoolExpr boolExpr(true);
-        PTR(Val) val = boolExpr.interp();
+        PTR(Val) val = boolExpr.interp(Env::empty);
         PTR(BoolVal) boolVal = CAST(BoolVal)(val);
         REQUIRE(boolVal != nullptr);
         ostringstream output;
@@ -771,7 +775,7 @@ TEST_CASE("Testing EqExpr 2") {
     }
     SECTION("interp") {
         // Assuming VarExpr::interp throws and EqExpr relies on variable resolution.
-        CHECK_THROWS_AS(eqExpr.interp(), std::runtime_error);
+        CHECK_THROWS_AS(eqExpr.interp(Env::empty), std::runtime_error);
     }
 }
 TEST_CASE("Testing IfExpr 2") {
@@ -803,7 +807,7 @@ TEST_CASE("Testing IfExpr 2") {
         CHECK_FALSE(ifExpr->equals(differentExpr) == true);
     }SECTION("interp") {
         // Assuming VarExpr::interp throws and IfExpr relies on condition evaluation.
-        CHECK_THROWS_AS(ifExpr.interp(), std::runtime_error);
+        CHECK_THROWS_AS(ifExpr.interp(Env::empty), std::runtime_error);
     }SECTION("pretty_print") {
         CHECK((NEW(IfExpr)(NEW(EqExpr)(NEW(Var)("x"), NEW(Num)(1)), NEW(Num)(1), NEW(Num)(2)))->to_pretty_string()
               ==
@@ -814,7 +818,7 @@ TEST_CASE("Testing IfExpr 2") {
 }
 
 TEST_CASE("Parse if"){
-    CHECK( parse_str("_if 1==1 _then 1 _else 2") ->interp()->equals(NEW(NumVal)(1)));
+    CHECK( parse_str("_if 1==1 _then 1 _else 2") ->interp(Env::empty)->equals(NEW(NumVal)(1)));
 }
 
 TEST_CASE("Parsing BoolExpr") {
@@ -830,45 +834,45 @@ TEST_CASE("Parsing IfExpr") {
 }
 
 TEST_CASE("Parsing EqExpr") {
-CHECK( parse_str("1 == 2")->interp()->equals(NEW(BoolVal)(false)) );
-CHECK( parse_str("2 == 2")->interp()->equals(NEW(BoolVal)(true)) );
-CHECK((parse_str("1 + 2 == 3 + 0"))->interp()->equals(NEW(BoolVal)(true)));
-CHECK((((parse_str("_if 1 == 2 _then 3 _else 4"))->interp())->to_string()) == "4");
+CHECK( parse_str("1 == 2")->interp(Env::empty)->equals(NEW(BoolVal)(false)) );
+CHECK( parse_str("2 == 2")->interp(Env::empty)->equals(NEW(BoolVal)(true)) );
+CHECK((parse_str("1 + 2 == 3 + 0"))->interp(Env::empty)->equals(NEW(BoolVal)(true)));
+CHECK((((parse_str("_if 1 == 2 _then 3 _else 4"))->interp(Env::empty))->to_string()) == "4");
 }
 
 TEST_CASE("If Expr Interp") {
-CHECK( parse_str("_if 1==1 _then 1 _else 2")->interp()->equals(NEW(NumVal)(1)));
-CHECK( parse_str("_if 10==12 _then 7 _else 5")->interp()->equals(NEW(NumVal)(5)));
-CHECK( parse_str("_if 0==0 _then 14 _else 7")->interp()->equals(NEW(NumVal)(14)));
-CHECK( parse_str("_if -4==-5 _then 6 _else 8")->interp()->equals(NEW(NumVal)(8)));
+CHECK( parse_str("_if 1==1 _then 1 _else 2")->interp(Env::empty)->equals(NEW(NumVal)(1)));
+CHECK( parse_str("_if 10==12 _then 7 _else 5")->interp(Env::empty)->equals(NEW(NumVal)(5)));
+CHECK( parse_str("_if 0==0 _then 14 _else 7")->interp(Env::empty)->equals(NEW(NumVal)(14)));
+CHECK( parse_str("_if -4==-5 _then 6 _else 8")->interp(Env::empty)->equals(NEW(NumVal)(8)));
 }
 
 TEST_CASE("FunExpr") {
 
     SECTION("Parsing FunExpr") {
         CHECK((parse_str("_let f = _fun (x) x+1"
-                         "_in f(10)"))->interp()->to_string() == "11");
+                         "_in f(10)"))->interp(Env::empty)->to_string() == "11");
     }
 
     SECTION("Parsing FunExpr") {
         CHECK((parse_str("_let f = _fun (x) x+1"
-                         " _in f(10)"))->interp()->to_string() == "11");
+                         " _in f(10)"))->interp(Env::empty)->to_string() == "11");
         CHECK((parse_str("_let f = _fun (x) x*x"
-                         "_in f(2)"))->interp()->to_string() == "4");
+                         "_in f(2)"))->interp(Env::empty)->to_string() == "4");
         CHECK((parse_str("_let y = 8"
                          "_in _let f = _fun (x) x*y"
-                         "_in f(2)"))->interp()->to_string() == "16");
+                         "_in f(2)"))->interp(Env::empty)->to_string() == "16");
         CHECK((parse_str("_let x = 8"
                          "_in _let f = _fun (x) x*x"
-                         "_in f(2)"))->interp()->to_string() == "4");
+                         "_in f(2)"))->interp(Env::empty)->to_string() == "4");
         CHECK((parse_str("_let factrl = _fun (factrl)"
                          "_fun (x)"
                          "_if x ==1"
                          "_then 1"
                          "_else x * factrl(factrl)(x + -1)"
-                         "_in factrl(factrl)(10)"))->interp()->to_string() == "3628800");
+                         "_in factrl(factrl)(10)"))->interp(Env::empty)->to_string() == "3628800");
     }SECTION("Parsing CallExpr") {
-        CHECK((parse_str("(_fun (x) x+1 (10))"))->interp()->to_string() == "11");
-        CHECK((parse_str("(_fun (x) x+x (1))"))->interp()->to_string() == "2");
+        CHECK((parse_str("(_fun (x) x+1 (10))"))->interp(Env::empty)->to_string() == "11");
+        CHECK((parse_str("(_fun (x) x+x (1))"))->interp(Env::empty)->to_string() == "2");
     }
 }

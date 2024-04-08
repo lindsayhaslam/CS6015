@@ -95,7 +95,10 @@ PTR(Val) BoolVal::call(PTR(Val) actualArg){
     throw runtime_error("Cannot call BoolVal");
 }
 
-FunVal::FunVal(string formalarg, PTR(Expr) body){
+FunVal::FunVal(string formalarg, PTR(Expr) body, PTR(Env) env){
+    if (env == nullptr){
+        env = Env::empty;
+    }
     this->formalarg = formalarg;
     this->body = body;
 }
@@ -124,8 +127,10 @@ void FunVal::print(ostream &ostream){
 bool FunVal::is_true(){
     return false;
 }
-PTR(Val) FunVal::call(PTR(Val) actualArg){
-    return body->subst(formalarg, actualArg->to_expr())->interp();
+PTR(Val) FunVal::call(PTR(Val) actualArg) {
+    PTR(Env) newEnv = NEW(ExtendedEnv)(formalarg, actualArg, env);
+    // Interpret the body of the function with the extended environment
+    return body->interp(newEnv);
 }
 
 

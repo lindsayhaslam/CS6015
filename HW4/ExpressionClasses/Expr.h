@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "pointer.h"
+#include "Env.h"
 
 using namespace std;
 class Val;
@@ -28,9 +29,9 @@ typedef enum {
 CLASS(Expr) {
 public:
     virtual bool equals(PTR(Expr) e) = 0;
-    virtual PTR(Val) interp() = 0;
+    virtual PTR(Val) interp(PTR(Env) env = nullptr) = 0;
 //    virtual bool has_variable()= 0;
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement)  = 0;
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement)  = 0;
     virtual void print (ostream& os) = 0;
     string to_string();
     void pretty_print(ostream &ostream);
@@ -44,10 +45,10 @@ public:
     explicit Num(int val);
     bool equals(PTR(Expr) e);
     //Return the value
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env);
     //Num will never have a variable.
 //    bool has_variable();
-    PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print(ostream& os);
 //    string to_string();
 };
@@ -57,10 +58,10 @@ public:
     string name;
     Var(string name);
     virtual bool equals(PTR(Expr) e);
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
     //Will have a variable.
 //    virtual bool has_variable();
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
 };
 
@@ -72,10 +73,10 @@ public:
     Add(PTR(Expr) lhs, PTR(Expr) rhs);
     bool equals(PTR(Expr) e);
     //Sum of the subexpression values
-    PTR(Val) interp();
+    PTR(Val) interp(PTR(Env) env = nullptr);
     //Check if either have a variable
 //    bool has_variable();
-    PTR(Expr) subst( string varName, PTR(Expr) replacement);
+//    PTR(Expr) subst( string varName, PTR(Expr) replacement);
     virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -87,10 +88,10 @@ public:
     Mult(PTR(Expr) lhs, PTR(Expr) rhs);
     bool equals(PTR(Expr) e);
     //The product of the subexpression values
-    PTR(Val) interp();
+    PTR(Val) interp(PTR(Env) env = nullptr);
     //Check if either have a variable
 //    bool has_variable();
-    PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream &os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -103,10 +104,10 @@ public:
     Let(string lhs, PTR(Expr) rhs, PTR(Expr) bodyExpr);
     virtual bool equals(PTR(Expr) e);
     //The product of the subexpression values
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
     //Check if either have a variable
 //    virtual bool has_variable();
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -116,9 +117,9 @@ public:
     bool val;
     BoolExpr(bool b);
     virtual bool equals (PTR(Expr) e);
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
 //    virtual bool has_variable();
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -131,9 +132,9 @@ public:
     IfExpr(PTR(Expr) if_, PTR(Expr) then_, PTR(Expr) else_);
 
     virtual bool equals (PTR(Expr) e);
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
 //    virtual bool has_variable();
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -144,9 +145,9 @@ public:
     PTR(Expr) lhs;
     EqExpr(PTR(Expr) rhs, PTR(Expr) lhs);
     virtual bool equals (PTR(Expr) e);
-    virtual PTR(Val) interp();
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
 //    virtual bool has_variable();
-    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
+//    virtual PTR(Expr) subst(string varName, PTR(Expr) replacement);
     virtual void print (ostream& os);
     void pretty_print_at(ostream &os, precedence_t node, bool let_parent, streampos &strmpos);
 };
@@ -157,8 +158,8 @@ public:
     PTR(Expr) body;
     FunExpr(string formalArg, PTR(Expr) body);
     virtual bool equals(PTR(Expr) e);
-    virtual PTR(Val) interp();
-    virtual PTR(Expr) subst(string str, PTR(Expr) e);
+    virtual PTR(Val) interp(PTR(Env) env = nullptr);
+//    virtual PTR(Expr) subst(string str, PTR(Expr) e);
     virtual void print(ostream& o);
 };
 
@@ -170,8 +171,8 @@ public:
     PTR(Expr) actualArg;
     CallExpr(PTR(Expr) toBeCalled, PTR(Expr) actualArg);
     bool equals(PTR(Expr) other);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string var, PTR(Expr) replacement);
+    PTR(Val) interp(PTR(Env) env = nullptr);
+//    PTR(Expr) subst(const std::string var, PTR(Expr) replacement);
     void print(std::ostream& o);
 };
 #endif //EXPRESSIONCLASSES_EXPR_H
